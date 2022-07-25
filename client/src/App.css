@@ -1,0 +1,78 @@
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:  sans-serif;
+}
+
+body {
+  background: rgb(30, 21, 41);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #8585855e;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(194, 194, 194, 0.5);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(239, 239, 239, 0.7);
+}
+
+/*********** Sweet alert style ***********/
+.swal2-popup{
+  background: #272740 ;
+  padding: 5px 0 15px 0;
+}
+
+.swal2-title{
+  font-weight: 100 !important;
+  font-size: 1.2em !important;
+  color: #fff;
+  text-align: left;
+  margin-left: 15px;
+}
+
+.swal2-input {
+  border: none;
+  outline: none !important;
+  color: #fff;
+  background: #353c54;
+}
+
+.swal2-input:focus {
+  border: none;
+  outline: none !important;
+}
+
+.swal2-input:active {
+  border: none;
+  outline: none !important;
+}
+
+/*Buttons*/
+.swal2-actions{
+  width: 85%;
+  justify-content: end;
+}
+
+.swal2-confirm {
+  background: #0297e1 !important;
+  color: #c0c0c0;
+}
+
+.swal2-cancel {
+  background: #464c62 !important;
+  color: #c0c0c0;
+}
