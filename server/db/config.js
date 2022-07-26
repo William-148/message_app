@@ -1,4 +1,3 @@
-//mongodb+srv://willadmin:<password>@cluster0.y0anvk8.mongodb.net/?retryWrites=true&w=majority
 import mongoose from 'mongoose';
 
 export const connectDB = async () => {

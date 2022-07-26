@@ -5,7 +5,7 @@ import cors from 'cors';
 import { connectDB } from './db/config.js';
 import routes from './routes/UserRoutes.js';
 import socket from './controllers/Socket.js';
-import './config.js'
+import { PORT } from './config.js'
 
 connectDB();
 const app = express();
@@ -23,8 +23,6 @@ app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb', extended:true}));
 
 /* ENDPOINTS */
-const PORT = 5000;
-
 app.get('/', (req, res) => {
     res.status(200).send({message:"Chat app!!"});
 });
