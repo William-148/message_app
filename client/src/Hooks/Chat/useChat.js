@@ -20,7 +20,7 @@ const useChat = (socket) => {
         message: '',
         messages: messagesData,
         activeUsers: [],
-        rooms: listRoom
+        rooms: []
     }
 
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -30,11 +30,11 @@ const useChat = (socket) => {
     }, []);
 
     useEffect(()=>{
-        if (!!socket) listen();
-    },[state.messages, state.rooms, socket]);
+        if (!socket) return;
+        socket.on("disconnect", () => {
+            socket.disconnect();
+        });
 
-    const listen = () => {
-        if(!socket) return;
         socket.on("getAllUsers", (users) => {
             dispatch({type: 'activeUsers', payload: users});
         });
@@ -43,7 +43,16 @@ const useChat = (socket) => {
         socket.on("updateUsers", (users) => {
             dispatch({type: 'activeUsers', payload: users});
         });
-    }
+
+        // Real time
+        socket.on("updateRooms", (rooms) => {
+            dispatch({
+                type: 'rooms',
+                payload: rooms
+            });
+        });
+
+    },[state.messages, state.rooms, socket]);
 
     const handleMessage = ({target:{value}}) => {
         const char = value.slice(-1);
@@ -73,11 +82,22 @@ const useChat = (socket) => {
         dispatch({type: 'message', payload: ''});
     }
 
+    const createRoom = (name) => {
+        socket.emit('create_room', name);
+        socket.on('get_room', (room) => {
+            dispatch({
+                type: 'rooms',
+                payload: [...state.rooms, room]
+            });
+        });
+    }
+
     return [
         state,
         dispatch,
         handleMessage,
-        sendMessage
+        sendMessage,
+        createRoom
     ];
 }
 

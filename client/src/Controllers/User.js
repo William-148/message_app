@@ -6,7 +6,7 @@ class User extends Control{
     ITEM_USER = "user";
 
     async signUp(user){
-        const {status, content} = await this.request('PORT', AUTH.signup, user);
+        const {status, content} = await this.request('POST', AUTH.signup, user);
         if(status === 500) return this.ERROR500;
         if(status >= 400) return {...content, success:false};
         return {...content, success:true};

@@ -25,7 +25,8 @@ export default function Chat() {
         {message, messages, activeUsers, rooms}, 
         dispatch, 
         handleMessage, 
-        sendMessage 
+        sendMessage,
+        createRoom
     ] = useChat(socket);
 
     useEffect(()=>{
@@ -36,20 +37,15 @@ export default function Chat() {
         if(!!lastMessageRef) lastMessageRef.current.scrollIntoView(false);
     }
 
-    const createRoom = async () => {
+    const newRoom = async () => {
         const result = await Swal.fire({
             title: 'Room name',
             input: 'text',
             showCancelButton: true,
             width: 330
         });
-        if(result.isConfirmed){
-            if(result.value !== '')
-            Swal.fire({
-                title: result.value,
-                width: 250
-            })
-        }
+        if(result.isConfirmed && result.value !== '')
+            createRoom(result.value);
     }
 
     const selectRoom = (selected) => {
@@ -95,20 +91,20 @@ export default function Chat() {
                         <div className="room-title">
                             <h3>Rooms</h3>
                             <span title="Create new room"
-                                onClick={createRoom}
+                                onClick={newRoom}
                             >
                                 <BiPlusCircle/>
                             </span>
                         </div>
                         <ul className="rooms-list">
                             { rooms.length > 0 
-                                ? (rooms.map((item, index) => (
-                                    <li key={index}
+                                ? (rooms.map((item) => (
+                                    <li key={item.id}
                                         title="Select room?"
                                         onClick={() => selectRoom(item)}
                                     >
                                         <span><BiChevronsRight/></span>
-                                        <h2>{item}</h2>
+                                        <h2>{item.name}</h2>
                                     </li>
                                 )))
                                 :(<li title="First create a room">
