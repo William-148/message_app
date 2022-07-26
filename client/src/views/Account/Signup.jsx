@@ -1,122 +1,104 @@
-import { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { BiEnvelope, BiKey, BiRename, BiUser, BiIdCard } from "react-icons/bi";
-import { FcGoogle } from "react-icons/fc"
+import { FcGoogle } from "react-icons/fc";
+import useForm from "../../Hooks/useForm";
+import FormInput from "./Components/FormInput";
+import Swal from 'sweetalert2';
+import USER from "../../Controllers/User";
 import './Account.css';
 // https://react-icons.github.io/react-icons/icons?name=bi
 
-export default function Signup() {
+const Signup = () => {
 
-    const [name, setName] = useState('');
-    const [nickname, setNickname] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [password2, setPassword2] = useState('');
+    const initialState = { 
+        name: '', 
+        nickname: '',
+        email: '',
+        password: '',
+        password2: ''
+    };
+    const [fields, fieldChange, resetFields] = useForm(initialState);
 
-    const login = (event) => {
+    const inputList = [
+        {title: "Name:", name:"name", autoFocus:true},
+        {title: "Nickname:", name:"nickname"},
+        {title: "Email:", name:"email", type:"email"},
+        {title: "Password:", name:"password", type:"password"},
+        {title: "Repeat Password:", name:"password2", type:"password"}
+    ];
+
+    const iconList = {
+        name: <BiUser className="input-icon"/>,
+        nickname: <BiIdCard className="input-icon"/>,
+        email: <BiEnvelope className="input-icon"/>,
+        password: <BiKey className="input-icon"/>,
+        password2: <BiRename className="input-icon"/>
+    }
+    
+    const login = async (event) => {
         event.preventDefault();
-        if(password !== password2) alert("Password are different!!");
-        const user = {
-            name,
-            nickname,
-            email,
-            password,
-            toString: function () { return  this.name + "- " + this.nickname + "- " + this.email + "- " + this.password }
+        const { password2, ...user} = fields;
+        if(user.password !== password2){
+            Swal.fire({
+                title: 'Password are differents.',
+                width: 300
+            });
+            return;
         }
-        alert(''+user);
-        console.log(user)
+        
+        const { msg, success } = await USER.signUp(user);
+        if(success) resetFields();
+        Swal.fire({
+            title: msg,
+            width: 300
+        });
+    }
+
+    const createFields = () => {
+        return inputList.map((item, index) =>
+            <FormInput key={index} 
+                {...item}
+                icon={iconList[item.name]}
+                value={fields[item.name]}
+                onChange={fieldChange}
+                required
+            />
+        )
     }
 
     return (
-        <>  
-            <div className='login-component'>
-                <div className="login-content">
-                    <aside>
-                        <div className="logo-content">
-                            <h1>Welcome</h1>
-                            <p>Create an account</p>
-                            <p>to get access</p>
+        <div className='login-component'>
+            <div className="login-content">
+                <aside>
+                    <div className="logo-content">
+                        <h1>Welcome</h1>
+                        <p>Create an account</p>
+                        <p>to get access</p>
+                    </div>
+                </aside>
+                <section>
+                    <h2>Sign Up</h2>
+                    <form className='form' onSubmit={login}>
+                        {createFields()}
+                        <div className='input-button'>
+                            <input type="submit" value="Sign Up" />
                         </div>
-                    </aside>
-                    <section>
-                        <h2>Sign Up</h2>
-                        <form className='form' onSubmit={login}>
-                            <div className="input-content">
-                                <h4>Name</h4>
-                                <div className="input">
-                                    <BiUser className="input-icon"/>
-                                    <input type="text" 
-                                        value={name}
-                                        onChange={(e)=>setName(e.target.value)}
-                                        required 
-                                        autoFocus 
-                                    />
-                                </div>
+                        <hr className="line" />
+                        <footer>
+                            <button className="login-g" type="button">
+                                <FcGoogle/>
+                                <p>Sign up with Google</p>
+                            </button>
+                            <div className="signup">
+                                <Link to="/">Sign In</Link>
                             </div>
-                            <div className="input-content">
-                                <h4>Nickname</h4>
-                                <div className="input">
-                                    <BiIdCard className="input-icon"/>
-                                    <input type="text" 
-                                        value={nickname}
-                                        onChange={(e)=>setNickname(e.target.value)}
-                                        required 
-                                    />
-                                </div>
-                            </div>
-                            <div className="input-content">
-                                <h4>Email</h4>
-                                <div className="input">
-                                    <BiEnvelope className="input-icon"/>
-                                    <input type="email" 
-                                        value={email}
-                                        onChange={(e)=>setEmail(e.target.value)}
-                                        required 
-                                    />
-                                </div>
-                            </div>
-                            <div className="input-content">
-                                <h4>Password</h4>
-                                <div className="input">
-                                    <BiKey className="input-icon"/>
-                                    <input type="password" 
-                                        value={password}
-                                        onChange={(e)=>setPassword(e.target.value)}
-                                        required 
-                                        />
-                                </div>
-                            </div>
-                            <div className="input-content">
-                                <h4>Repeat Password</h4>
-                                <div className="input">
-                                    <BiRename className="input-icon"/>
-                                    <input type="password" 
-                                        value={password2}
-                                        onChange={(e)=>setPassword2(e.target.value)}
-                                        required 
-                                        />
-                                </div>
-                            </div>
-
-                            <div className='input-button'>
-                                <input type="submit" value="Sign Up" />
-                            </div>
-                            <hr className="line" />
-                            <footer>
-                                <button className="login-g" type="button">
-                                    <FcGoogle/>
-                                    <p>Sign up with Google</p>
-                                </button>
-                                <div className="signup">
-                                    <Link to="/">Sign In</Link>
-                                </div>
-                            </footer>
-                        </form>
-                    </section>
-                </div>
+                        </footer>
+                    </form>
+                </section>
             </div>
-        </>
+        </div>
     );
 }
 
- 
+ export default Signup;

@@ -1,5 +1,6 @@
 
 export default class Control{
+    ERROR500 = {success:false,  msg: "Un error ha ocurrido, intente mas tarde" }
 
     async request(method, url, data=undefined){
         const headers = {

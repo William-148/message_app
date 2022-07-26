@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const useForm = (initialState = {}) => {
+const useForm = (initialState = {}) => {
     const [ fields, setFields ] = useState(initialState);
 
     const fieldChange = ({target:{name, value}}) => {
@@ -10,5 +10,9 @@ export const useForm = (initialState = {}) => {
         });
     }
 
-    return [ fields, fieldChange ];
+    const reseFields = () => setFields(initialState);
+
+    return [fields, fieldChange, reseFields];
 }
+
+export default useForm;

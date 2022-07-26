@@ -1,60 +1,36 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext } from "react";
 import Swal from 'sweetalert2';
-import UserContext from "../../Context/User/UserContext";
 import { BiHappyBeaming, BiRightArrowCircle, BiChat, 
     BiXCircle, BiPlusCircle, BiChevronsRight,
     BiMessageAltX 
 } from "react-icons/bi";
 import { Contact, Message } from './Components/ChatElements';
+import UserContext from "../../Context/User/UserContext";
+import useToggle from "../../Hooks/useToggle";
+import useChat from "../../Hooks/Chat/useChat";
 import Picker from "emoji-picker-react";
 
 import './Chat.css'
 // https://react-icons.github.io/react-icons/icons?name=bi
-
-const messagesData = [
-    {user:"Jhoel", msg:"hola estoy aqui", time:"12:20 p.m.", isOwner:true},
-    {user:"Jhoel", msg:"hola estoy aqui", time:"12:20 p.m."},
-    {user:"Jhoel", msg:"Hola este es un mensaje para decir que la lucha que se esta llevando a cabo no será en vano", time:"12:20 p.m.", isOwner:true},
-    {user:"doxL011", msg:"hola estoy aqui", time:"12:20 p.m."},
-    {user:"Jhoel", msg:"Este es otro mensaje para realizar un test", time:"12:20 p.m.", isOwner:true},
-    {user:"paradox", msg:"hola estoy aqui", time:"12:20 p.m."}
-];
-
-const listRoom = [
-    "News", "games", "music"
-]
 
 export default function Chat() {
 
     const { socket, user } = useContext(UserContext);
     const lastMessageRef = useRef();
 
-    const [showEmoji, setShowEmoji] = useState(false);
-    const [message, setMessage] = useState("");
-    const [sidebarActive, setSidebarActive] = useState(true);
-    const [messages, setMessages] = useState(messagesData);
-    const [activeUsers, setActiveUsers] = useState([]);
-    const [rooms, setRooms] = useState(listRoom);
+    const [sidebarActive, setSidebarActive] = useToggle(true);
+    const [showEmoji, setShowEmoji] = useToggle(false);
 
-    useEffect(() => {
-        if(!!socket) socket.emit("request_users")
-    }, []);
+    const [
+        {message, messages, activeUsers, rooms}, 
+        dispatch, 
+        handleMessage, 
+        sendMessage 
+    ] = useChat(socket);
 
     useEffect(()=>{
-        if (!!socket) socketHandler();
         updateView();
-    },[messages, rooms, socket]);
-
-    const socketHandler = () => {
-        socket.on("getAllUsers", (users) => {
-            setActiveUsers(users);
-        });
-        
-        // Real time
-        socket.on("updateUsers", (users) => {
-            setActiveUsers(users);
-        });
-    }
+    },[messages]);
 
     const updateView = () => {
         if(!!lastMessageRef) lastMessageRef.current.scrollIntoView(false);
@@ -65,7 +41,6 @@ export default function Chat() {
             title: 'Room name',
             input: 'text',
             showCancelButton: true,
-            confirmButtonClass: "btn-cnf",
             width: 330
         });
         if(result.isConfirmed){
@@ -82,33 +57,10 @@ export default function Chat() {
     }
 
     const onEmojiClick = (event, emojiObject) => {
-        setMessage(message + emojiObject.emoji);
-    }
-
-    const handleMessage = (event) => {
-        const text = event.target.value;
-        const char = text.slice(-1);
-        if(char === '\n'){
-            sendMessage();
-            return;
-        }
-        setMessage(text);
-    }
-
-    const sendMessage = (event=null) => {
-        if(!!event)event.preventDefault();
-        const current = new Date();
-        const hours = current.getHours();
-        const minutes = current.getMinutes();
-        setMessages([
-            ...messages, 
-            { 
-                msg:message, 
-                time:`${hours}:${minutes < 10 ? `0${minutes}`: minutes}`, 
-                isOwner:true
-            }
-        ]);
-        setMessage('');
+        dispatch({
+            type: "message",
+            payload: message + emojiObject.emoji
+        });
     }
 
     return (
@@ -171,8 +123,8 @@ export default function Chat() {
             <main className="principal-content">
                 { showEmoji && <Picker onEmojiClick={onEmojiClick} pickerStyle={{position:"fixed"}}/> }
                 { sidebarActive 
-                    ? <BiXCircle className="btn-sidebar-chat" onClick={()=>setSidebarActive(false)}/> 
-                    : <BiChat className="btn-sidebar-chat" onClick={()=>setSidebarActive(true)}/> 
+                    ? <BiXCircle className="btn-sidebar-chat" onClick={setSidebarActive}/> 
+                    : <BiChat className="btn-sidebar-chat" onClick={setSidebarActive}/> 
                 }
                 <nav className="chat-status">
                     <h3>Room </h3>
@@ -186,7 +138,7 @@ export default function Chat() {
                 </section>
                 <footer className="chat-input">
                     <div className="icon-option">
-                        <BiHappyBeaming className="icon" onClick={()=>setShowEmoji(!showEmoji)} />
+                        <BiHappyBeaming className="icon" onClick={setShowEmoji} />
                     </div>
                     <form className="input-container" id="inputMessage" onSubmit={sendMessage}>
                         <textarea rows="2"

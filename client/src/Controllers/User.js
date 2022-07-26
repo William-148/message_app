@@ -5,13 +5,20 @@ const { AUTH } = api;
 class User extends Control{
     ITEM_USER = "user";
 
-    async signIn(email, password){
-        const {status, content} = await this.request('POST', AUTH.signin, {email, password});
-        if(status === 500) return "Un error ha ocurrido, intente mas tarde";
-        if(status >= 400) return content;
+    async signUp(user){
+        const {status, content} = await this.request('PORT', AUTH.signup, user);
+        if(status === 500) return this.ERROR500;
+        if(status >= 400) return {...content, success:false};
+        return {...content, success:true};
+    }
+
+    async signIn(credentials){
+        const {status, content} = await this.request('POST', AUTH.signin, credentials);
+        if(status === 500) return this.ERROR500;
+        if(status >= 400) return {...content, success:false};
         //Saving user data in localstorage
         this.setItem(this.ITEM_USER, content.data);
-        return content;
+        return {...content, success:true};
     }
 
     getUser(){

@@ -6,6 +6,7 @@ import { FaCuttlefish, FaBars, FaThLarge, FaRegUserCircle,
     FaRegCommentAlt, FaRegChartBar, FaRegFolder,
     FaRegHeart, FaWrench, FaSignOutAlt
 } from "react-icons/fa";
+import useToggle from "../../Hooks/useToggle";
 import UserContext from "../../Context/User/UserContext";
 import USER from "../../Controllers/User";
 import Api from "../../Config/Api";
@@ -25,7 +26,7 @@ export default function Home() {
     ];
 
     const { socket, initSocket, user, signout } = useContext(UserContext);
-    const [sidebarActive, setSidebarActive] = useState(false);
+    const [sidebarActive, setSidebarActive] = useToggle(false);
     const [links, setLinks] = useState(asideOptions);
 
     useEffect(() => {
@@ -63,7 +64,7 @@ export default function Home() {
 
     const setActive = (position) => {
         const data = links.map((item, index) => {
-            item['active'] = (position === index) ? true: false ;
+            item['active'] = (position === index);
             return item;
         });
         setLinks(data);
@@ -77,7 +78,7 @@ export default function Home() {
                         <FaCuttlefish className="ico"/>
                         <div className="logo-name">Code</div>
                     </div>
-                    <FaBars id="btn-menu" onClick={() => setSidebarActive(!sidebarActive)}/>
+                    <FaBars id="btn-menu" onClick={setSidebarActive}/>
                 </nav>
                 <ul className="navlist">
                     {links.map((item,index) => (
