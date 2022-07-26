@@ -1,4 +1,5 @@
-const BACKEND_HOST = process.env.HOST || 'http://192.168.1.112:5000';
+//const BACKEND_HOST = 'http://192.168.1.112:5000';
+const BACKEND_HOST = 'https://backend-message-app.herokuapp.com';
 
 export default {
     HOST: BACKEND_HOST,
