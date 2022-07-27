@@ -3,7 +3,8 @@ import {
     BrowserRouter,
     Routes,
     Route,
-    Navigate
+    Navigate,
+    useLocation
   } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import Signup from './views/Account/Signup';
@@ -15,42 +16,39 @@ import UserContext from "./Context/User/UserContext";
 import USER from "./Controllers/User";
 import './App.css';
 
-function App() {
+const Protected = ({element, isPublic}) => {
+    const { user } = useContext(UserContext);
+    const location = useLocation();
+    if(!!isPublic) return !!user ? <Navigate to="/desktop" state={location} replace /> : element;
+    return !user ? <Navigate to="/" state={location} replace /> : element;
+}
 
+function App() {
     const { user, signin } = useContext(UserContext);
 
-    useEffect(() => {
-        isLoggedIn();
-    }, []);
-
-    const isLoggedIn = () => {
+    useEffect(()=>{
         if(!!user) return;
         const itemUser = USER.getUser();
         if(!!itemUser) signin(itemUser);
-    }
+    }, []);
 
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={
-                    !!user 
-                    ? <Navigate to="/desktop/init" replace /> 
-                    : <SignIn/>
+                    <Protected isPublic element={ <SignIn/> }/>
                 }/>
                 <Route path="/signup" element={
-                    !!user 
-                    ? <Navigate to="/desktop/init" replace /> 
-                    : <Signup/>
+                    <Protected isPublic element={ <Signup/> }/>
                 }/>
-                <Route path="/desktop/" element={
-                    !user 
-                    ? <Navigate to="/" replace /> 
-                    : <Home/>
+                <Route path="/desktop" element={
+                    <Protected element={<Home/>} />
                 } >
-                    <Route path="init"  element={<div><h2>Init</h2></div>}/>
+                    <Route index  element={<div><h2>Init</h2></div>}/>
                     <Route path="inbox"  element={<Chat />}/>
                     <Route path="settings"  element={<div><h1>Configuraciones</h1></div>}/>
                 </Route>
+                <Route path='*' element={<h1 style={{color:"#fff"}}>Not Found</h1>}/>
             </Routes>
         </BrowserRouter>
     );

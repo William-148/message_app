@@ -1,10 +1,10 @@
-import { useState, useContext, useEffect } from "react";
-import { Outlet, Link } from 'react-router-dom';
+import { useContext, useEffect } from "react";
+import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import io from "socket.io-client";
 import Swal from 'sweetalert2';
-import { FaCuttlefish, FaBars, FaThLarge, FaRegUserCircle,
-    FaRegCommentAlt, FaRegChartBar, FaRegFolder,
-    FaRegHeart, FaWrench, FaSignOutAlt
+import { FaCuttlefish, FaBars, FaThLarge,
+    FaRegCommentAlt
+    , FaWrench, FaSignOutAlt
 } from "react-icons/fa";
 import useToggle from "../../Hooks/useToggle";
 import UserContext from "../../Context/User/UserContext";
@@ -15,22 +15,25 @@ const { HOST } = Api;
 // https://react-icons.github.io/react-icons/icons?name=bi
 
 export default function Home() {
-    const asideOptions = [
-        { title: "Dashboard", route: "init", icon: <FaThLarge className="ico" />, active:true },
-        { title: "Chat", route: "inbox", icon: <FaRegCommentAlt className="ico" /> },
-        { title: "Setting", route: "settings", icon: <FaWrench className="ico" /> },
-        // { title: "Users", route: "init", icon: <FaRegUserCircle className="ico" /> },
-        // { title: "Analytics", route: "init", icon: <FaRegChartBar className="ico" /> },
-        // { title: "Files", route: "init", icon: <FaRegFolder className="ico" /> },
-        // { title: "Saved", route: "init", icon: <FaRegHeart className="ico" /> },
+    const links = [
+        { title: "Dashboard", to: "", end:true, icon: <FaThLarge className="ico" />},
+        { title: "Chat", to: "inbox", icon: <FaRegCommentAlt className="ico" /> },
+        { title: "Setting", to: "settings", icon: <FaWrench className="ico" /> }
     ];
 
     const { socket, initSocket, user, signout } = useContext(UserContext);
     const [sidebarActive, setSidebarActive] = useToggle(false);
-    const [links, setLinks] = useState(asideOptions);
+    const navigate = useNavigate();
+    const { state } = useLocation();
+
 
     useEffect(() => {
-        if(!socket) initSocket(io(HOST));
+        if(!socket) {
+            initSocket(io(HOST));
+            console.log("nueva conexion");
+        }
+        // Redirect to current route when the page is reload
+        navigate(state?.state?.pathname ?? '/desktop')
     }, []);
 
     useEffect(() => {
@@ -62,14 +65,6 @@ export default function Home() {
         }
     }
 
-    const setActive = (position) => {
-        const data = links.map((item, index) => {
-            item['active'] = (position === index);
-            return item;
-        });
-        setLinks(data);
-    }
-
     return (
         <>
             <aside className={`sidebar ${sidebarActive ? 'menu-active': ''}`}>
@@ -82,14 +77,9 @@ export default function Home() {
                 </nav>
                 <ul className="navlist">
                     {links.map((item,index) => (
-                        <AsideLink key={index} 
-                            title={item.title} 
-                            route={item.route}
-                            active={item.active}
-                            onClick={()=>setActive(index)}
-                        >
-                            {item.icon}
-                        </AsideLink>
+                        <li key={index}>
+                            <AsideLink {...item}/>
+                        </li>
                     ))}
                 </ul>
                 <footer className="profile-content">
@@ -120,14 +110,13 @@ export default function Home() {
     );    
 }
 
-const AsideLink = (props) => {
-    const background = { background:"#00000040" }
+const AsideLink = ({icon, title, ...props}) => {
     return (
-        <li style={props.active?background:{}} >
-            <Link to={props.route} onClick={props.onClick}>
-                {props.children}
-                <span className="links-name">{props.title}</span>
-            </Link>
-        </li>
+        <NavLink {...props}
+            className={({isActive}) => isActive ? 'active-navlink' : undefined}
+        >
+            {icon}
+            <span className="links-name">{title}</span>
+        </NavLink>
     );
 }

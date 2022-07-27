@@ -43,6 +43,11 @@
     width: 100%;
 }
 
+.active-navlink, .active-navlink:hover {
+    background: #00000040;
+    cursor: unset;
+}
+
 .logo-content .logo .ico{
     font-size: 28px;
     margin-right: 5px;

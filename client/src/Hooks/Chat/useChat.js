@@ -10,10 +10,6 @@ const messagesData = [
     {user:"paradox", msg:"hola estoy aqui", time:"12:20 p.m."}
 ];
 
-const listRoom = [
-    "News", "games", "music"
-]
-
 const useChat = (socket) => {
 
     const initialState = {
