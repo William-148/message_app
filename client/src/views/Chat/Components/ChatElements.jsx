@@ -10,17 +10,17 @@ const Contact = ({nickname, state, profile}) => {
     );
 }
 
-const Message = ({data}) => {
-    const owner = !!data.isOwner ? 'message-owner' : '';
+const Message = ({data, isOwner}) => {
+    const ownerClass = !!isOwner ? 'message-owner' : '';
     return (
-        <div className={`message ${owner}`}>
-            { !data.isOwner && <h3>{data.user}</h3> }
-            <div className={`message-text ${owner}`}>
-                <p className={`${owner} ${!!data.isOwner?"background-owner":""}`}>
-                    {data.msg}
+        <div className={`message ${ownerClass}`}>
+            { !isOwner && <h3>{data.writter}</h3> }
+            <div className={`message-text ${ownerClass}`}>
+                <p className={`${ownerClass} ${!!isOwner?"background-owner":""}`}>
+                    {data.message}
                 </p>
             </div>
-            <span className={owner}>
+            <span className={ownerClass}>
                 {data.time}
             </span>
         </div>

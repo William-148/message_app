@@ -1,3 +1,4 @@
+import Message from './models/Message.js';
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
@@ -25,6 +26,14 @@ app.use(express.urlencoded({limit: '50mb', extended:true}));
 /* ENDPOINTS */
 app.get('/', (req, res) => {
     res.status(200).send({message:"Chat app!!"});
+});
+
+app.post('/test', async (req, res) => {
+    // const data = new Message(req.body);
+    // const result = await data.save();
+    // console.log(result)
+    // console.log(finded);
+    res.status(200).send({message:"Test app!!", data});
 });
 
 app.use('/', routes)

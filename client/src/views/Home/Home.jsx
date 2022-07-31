@@ -1,11 +1,11 @@
 import { useContext, useEffect } from "react";
-import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { FaCuttlefish, FaBars, FaThLarge,
+    FaRegCommentAlt, FaWrench, FaSignOutAlt
+} from "react-icons/fa";
 import io from "socket.io-client";
 import Swal from 'sweetalert2';
-import { FaCuttlefish, FaBars, FaThLarge,
-    FaRegCommentAlt
-    , FaWrench, FaSignOutAlt
-} from "react-icons/fa";
+import { AsideLink } from "./Components/HomeElements";
 import useToggle from "../../Hooks/useToggle";
 import UserContext from "../../Context/User/UserContext";
 import USER from "../../Controllers/User";
@@ -14,24 +14,21 @@ import './Home.css'
 const { HOST } = Api;
 // https://react-icons.github.io/react-icons/icons?name=bi
 
+const links = [
+    { title: "Dashboard", to: "", end:true, icon: <FaThLarge className="ico" />},
+    { title: "Chat", to: "inbox", icon: <FaRegCommentAlt className="ico" /> },
+    { title: "Setting", to: "settings", icon: <FaWrench className="ico" /> }
+];
+
 export default function Home() {
-    const links = [
-        { title: "Dashboard", to: "", end:true, icon: <FaThLarge className="ico" />},
-        { title: "Chat", to: "inbox", icon: <FaRegCommentAlt className="ico" /> },
-        { title: "Setting", to: "settings", icon: <FaWrench className="ico" /> }
-    ];
 
     const { socket, initSocket, user, signout } = useContext(UserContext);
     const [sidebarActive, setSidebarActive] = useToggle(false);
-    const navigate = useNavigate();
     const { state } = useLocation();
-
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if(!socket) {
-            initSocket(io(HOST));
-            console.log("nueva conexion");
-        }
+        if(!socket) initSocket(io(HOST));
         // Redirect to current route when the page is reload
         navigate(state?.state?.pathname ?? '/desktop')
     }, []);
@@ -65,6 +62,13 @@ export default function Home() {
         }
     }
 
+    const asideLinks = () => {
+        return links.map((item,index) => (
+            <li key={index}>
+                <AsideLink {...item}/>
+            </li>
+        ));
+    }
     return (
         <>
             <aside className={`sidebar ${sidebarActive ? 'menu-active': ''}`}>
@@ -76,11 +80,7 @@ export default function Home() {
                     <FaBars id="btn-menu" onClick={setSidebarActive}/>
                 </nav>
                 <ul className="navlist">
-                    {links.map((item,index) => (
-                        <li key={index}>
-                            <AsideLink {...item}/>
-                        </li>
-                    ))}
+                    { asideLinks() }
                 </ul>
                 <footer className="profile-content">
                     <div className="profile">
@@ -110,13 +110,3 @@ export default function Home() {
     );    
 }
 
-const AsideLink = ({icon, title, ...props}) => {
-    return (
-        <NavLink {...props}
-            className={({isActive}) => isActive ? 'active-navlink' : undefined}
-        >
-            {icon}
-            <span className="links-name">{title}</span>
-        </NavLink>
-    );
-}

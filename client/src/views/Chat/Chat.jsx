@@ -22,11 +22,12 @@ export default function Chat() {
     const [showEmoji, setShowEmoji] = useToggle(false);
 
     const [
-        {message, messages, activeUsers, rooms}, 
+        {message, messages, activeUsers, rooms, room}, 
         dispatch, 
         handleMessage, 
         sendMessage,
-        createRoom
+        createRoom,
+        selectRoom
     ] = useChat(socket);
 
     useEffect(()=>{
@@ -46,10 +47,6 @@ export default function Chat() {
         });
         if(result.isConfirmed && result.value !== '')
             createRoom(result.value);
-    }
-
-    const selectRoom = (selected) => {
-        alert(selected);
     }
 
     const onEmojiClick = (event, emojiObject) => {
@@ -99,7 +96,7 @@ export default function Chat() {
                         <ul className="rooms-list">
                             { rooms.length > 0 
                                 ? (rooms.map((item) => (
-                                    <li key={item.id}
+                                    <li key={item._id}
                                         title="Select room?"
                                         onClick={() => selectRoom(item)}
                                     >
@@ -128,7 +125,10 @@ export default function Chat() {
                 <section className="chat-message" >
                     <div className="message-content" ref={lastMessageRef} >
                         {messages.map((data, index) => (
-                            <Message key={index} data={data}/>
+                            <Message key={!!data._id ? data._id : index} 
+                                data={data} 
+                                isOwner={user._id === data.writterId}
+                            />
                         ))}
                     </div>
                 </section>
@@ -136,7 +136,9 @@ export default function Chat() {
                     <div className="icon-option">
                         <BiHappyBeaming className="icon" onClick={setShowEmoji} />
                     </div>
-                    <form className="input-container" id="inputMessage" onSubmit={sendMessage}>
+                    <form className="input-container" id="inputMessage" 
+                        onSubmit={(e) => sendMessage(e, user)}
+                    >
                         <textarea rows="2"
                             placeholder="Type here ..." 
                             required  

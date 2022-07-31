@@ -1,7 +1,5 @@
-import { nanoid } from 'nanoid';
-
+import ROOM from './Room.js';
 let users = [];
-let rooms = [];
 
 const startSocket = (io) => {
     io.on('connection', (socket) => {
@@ -26,41 +24,35 @@ const startSocket = (io) => {
         });
     
         // Request users and rooms*
-        socket.on('request_users', () => {
+        socket.on('request_users', async () => {
             socket.emit('getAllUsers', users);
-            socket.emit('updateRooms', rooms);
+            const rooms = await ROOM.getAll();
+            socket.emit('srv:updateRooms', rooms);
         });
         
         // Create rooms*
-        socket.on('create_room', (name) => {
-            const room = {
-                id: nanoid(7),
-                name,
-                chat: [],
-            };
-    
-            socket.join(room);
-            socket.emit('get_room', room);
-            rooms.push(room);
-            socket.broadcast.emit('updateRooms', rooms);
+        socket.on('cl:create_room', async (name) => {
+            const room = await ROOM.create(name);
+            if(!room) {
+                socket.emit('srv:error', "Room could not be created."); 
+                return;
+            }
+            socket.join('' + room._id);
+            socket.emit('srv:get_room', room);
+            const rooms = await ROOM.getAll();
+            socket.broadcast.emit('srv:updateRooms', rooms);
         });
     
-        socket.on("join_room", (room) => {
-            socket.join(room.id);
+        socket.on("cl:join_room", async (roomId) => {
+            socket.join(roomId);
+            const msgs = await ROOM.getTodayMessages(roomId);
+            socket.emit('srv:getCurrentMsg', msgs);
         });
     
-        socket.on("message", (payload) => {
-            rooms.map((room) => {
-                if (room.id === payload.room) {
-                    const singleChat = { 
-                        message: payload.message, 
-                        writer: payload.socketId 
-                    };
-                    room.chat.push(singleChat);
-                    payload.chat = room.chat;
-                }
-            });
-            io.to(payload.room).emit("chat", payload);
+        socket.on("cl:message", async(payload) => {
+            const result = await ROOM.saveMessage(payload)
+            if(!result) return;
+            io.to(payload.roomId).emit('srv:chat', result);
         });
     });
 }

@@ -2,12 +2,12 @@ import { useEffect, useReducer } from 'react';
 import { reducer } from './chatReducer';
 
 const messagesData = [
-    {user:"Jhoel", msg:"hola estoy aqui", time:"12:20 p.m.", isOwner:true},
-    {user:"Jhoel", msg:"hola estoy aqui", time:"12:20 p.m."},
-    {user:"Jhoel", msg:"Hola este es un mensaje para decir que la lucha que se esta llevando a cabo no será en vano", time:"12:20 p.m.", isOwner:true},
-    {user:"doxL011", msg:"hola estoy aqui", time:"12:20 p.m."},
-    {user:"Jhoel", msg:"Este es otro mensaje para realizar un test", time:"12:20 p.m.", isOwner:true},
-    {user:"paradox", msg:"hola estoy aqui", time:"12:20 p.m."}
+    {_id:"1", writterId:"1", writter:"Jhoel", message:"hola estoy aqui", time:"12:20 p.m.", date: "Today"},
+    {_id:"2", writterId:"2", writter:"Jhoel", message:"hola estoy aqui", time:"12:20 p.m."},
+    {_id:"3", writterId:"3", writter:"Jhoel", message:"Hola este es un mensaje para decir que la lucha que se esta llevando a cabo no será en vano", time:"12:20 p.m.", isOwner:true},
+    {_id:"4", writterId:"4", writter:"doxL011", message:"hola estoy aqui", time:"12:20 p.m."},
+    {_id:"5", writterId:"5", writter:"Jhoel", message:"Este es otro mensaje para realizar un test", time:"12:20 p.m.", isOwner:true},
+    {_id:"6", writterId:"6", writter:"paradox", message:"hola estoy aqui", time:"12:20 p.m."}
 ];
 
 const useChat = (socket) => {
@@ -16,6 +16,7 @@ const useChat = (socket) => {
         message: '',
         messages: messagesData,
         activeUsers: [],
+        room: undefined,
         rooms: []
     }
 
@@ -39,12 +40,36 @@ const useChat = (socket) => {
         socket.on("updateUsers", (users) => {
             dispatch({type: 'activeUsers', payload: users});
         });
+        
+        socket.on("srv:get_room", (room) => {
+            dispatch({
+                type: 'rooms',
+                payload: [...rooms, room]
+            });
+        });
 
         // Real time
-        socket.on("updateRooms", (rooms) => {
+        socket.on("srv:updateRooms", (rooms) => {
             dispatch({
                 type: 'rooms',
                 payload: rooms
+            });
+        });
+
+        socket.on("srv:getCurrentMsg", (msgs) => {
+            dispatch({
+                type: 'messages',
+                payload: msgs
+            });
+        });
+
+        socket.on("srv:chat", (msg) => {
+            dispatch({
+                type: 'messages',
+                payload: [
+                    ...state.messages,
+                    msg
+                ]
             });
         });
 
@@ -59,32 +84,48 @@ const useChat = (socket) => {
         dispatch({type: 'message', payload: value});
     }
 
-    const sendMessage = (event) => {
+    const sendMessage = (event, user) => {
         if(!!event)event.preventDefault();
         const current = new Date();
         const hours = current.getHours();
         const minutes = current.getMinutes();
-        dispatch({
-            type: 'messages',
-            payload: [
-                ...state.messages, 
-                { 
-                    msg: state.message, 
-                    time:`${hours}:${minutes < 10 ? `0${minutes}`: minutes}`, 
-                    isOwner:true
-                }
+        const newMsg = {
+            roomId: state.room._id,
+            writterId: user._id, 
+            writter: user.nickname, 
+            message: state.message, 
+            time:`${hours}:${minutes < 10 ? `0${minutes}`: minutes}`
+        }
+        /*
+        dispatch({ type: 'messages',  payload: [
+                ...state.messages,
+                newMsg
             ]
         });
+        */
+        socket.emit('cl:message', newMsg)
         dispatch({type: 'message', payload: ''});
     }
 
     const createRoom = (name) => {
-        socket.emit('create_room', name);
+        socket.emit('cl:create_room', name);
         socket.on('get_room', (room) => {
             dispatch({
                 type: 'rooms',
                 payload: [...state.rooms, room]
             });
+            dispatch({
+                type: "messages",
+                payload: []
+            });
+        });
+    }
+
+    const selectRoom = (room) => {
+        socket.emit('cl:join_room', room._id);
+        dispatch({
+            type:"room",
+            payload: room
         });
     }
 
@@ -93,7 +134,8 @@ const useChat = (socket) => {
         dispatch,
         handleMessage,
         sendMessage,
-        createRoom
+        createRoom,
+        selectRoom
     ];
 }
 

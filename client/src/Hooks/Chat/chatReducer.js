@@ -22,6 +22,11 @@ export const reducer = (state, action) => {
                 ...state,
                 rooms: payload
             }
+        case 'room':
+            return {
+                ...state,
+                room: payload
+            }
         default: return state;
     }
 }
