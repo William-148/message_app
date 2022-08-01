@@ -10,7 +10,7 @@ import { useContext, useEffect } from "react";
 import Signup from './views/Account/Signup';
 import SignIn from "./views/Account/SignIn";
 import Home from "./views/Home/Home";
-import Chat from "./views/Chat/Chat";
+import Inbox from "./views/Chat/Inbox";
 import UserState from "./Context/User/UserState";
 import UserContext from "./Context/User/UserContext";
 import USER from "./Controllers/User";
@@ -45,7 +45,7 @@ function App() {
                     <Protected element={<Home/>} />
                 } >
                     <Route index  element={<div><h2>Init</h2></div>}/>
-                    <Route path="inbox"  element={<Chat />}/>
+                    <Route path="inbox"  element={<Inbox />}/>
                     <Route path="settings"  element={<div><h1>Configuraciones</h1></div>}/>
                 </Route>
                 <Route path='*' element={<h1 style={{color:"#fff"}}>Not Found</h1>}/>

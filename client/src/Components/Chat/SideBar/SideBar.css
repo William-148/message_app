@@ -1,0 +1,123 @@
+.chat-profile {
+    width: 100%;
+    padding: 20px 0;
+    padding-top: 30px;
+    margin: auto;
+    text-align: center;
+}
+
+.chat-profile img{
+    border-radius: 50%;
+    margin-bottom: 10px;
+    width: 120px;
+    border: solid 3px #5869bd;
+}
+
+.chat-profile h3{
+    color: #fff;
+    font-weight: 100;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.chat-profile h4 {
+    color: #999aa3;
+    font-weight: 100;
+    font-size: 0.9rem;
+}
+
+
+
+.chat-contacts {
+    padding: 0 20px;
+}
+
+.chat-rooms .room-title {
+    display: flex;
+}
+
+.chat-rooms .room-title span {
+    color: #c8c8c8;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.chat-rooms .room-title span:hover {
+    color: #ff0505;
+}
+
+.chat-members > h3,
+.chat-rooms .room-title > h3{
+    color: #b6b7c3;
+    font-weight: lighter;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    margin-right: auto;
+}
+
+.chat-members .members-list{
+    padding: 0 5px 0 0;
+    max-height: 220px;
+    width: 100%;
+    overflow-y: auto;
+    margin-bottom: 5px;
+}
+
+.chat-rooms .rooms-list{
+    height: 220px;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.rooms-list li {
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+    list-style: none;
+    padding: 6px 0;
+}
+
+.rooms-list li:hover span{
+    background: #999aa35f;
+    border-radius: 4px;
+}
+
+.rooms-list li span {
+    color: #00eaff;
+    font-size: 15px;
+    line-height: 14px;
+}
+
+.rooms-list li h2 {
+    color: #fff;
+    font-size: 15px;
+    line-height: 14px;
+    font-weight: lighter;
+}
+
+.member {
+    display: flex;
+    margin-bottom: 10px;
+    background: rgba(100, 105, 128, 0.5);
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+.member img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: solid 1px #24a2bf;
+}
+
+.member section h3{
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: lighter;
+}
+
+.member section p{
+    color: rgb(207, 207, 207);
+    font-size: 0.8rem;
+}

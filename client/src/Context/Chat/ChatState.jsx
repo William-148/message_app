@@ -1,14 +1,6 @@
 import React, { useReducer, useEffect } from "react";
 import ChatReducer from "./ChatReducer";
 import ChatContext from "./ChatContext";
-const messagesData = [
-    {_id:"1", writterId:"1", writter:"Jhoel", message:"hola estoy aqui", time:"12:20 p.m.", date: "Today"},
-    {_id:"2", writterId:"2", writter:"Jhoel", message:"hola estoy aqui", time:"12:20 p.m."},
-    {_id:"3", writterId:"3", writter:"Jhoel", message:"Hola este es un mensaje para decir que la lucha que se esta llevando a cabo no será en vano", time:"12:20 p.m.", isOwner:true},
-    {_id:"4", writterId:"4", writter:"doxL011", message:"hola estoy aqui", time:"12:20 p.m."},
-    {_id:"5", writterId:"5", writter:"Jhoel", message:"Este es otro mensaje para realizar un test", time:"12:20 p.m.", isOwner:true},
-    {_id:"6", writterId:"6", writter:"paradox", message:"hola estoy aqui", time:"12:20 p.m."}
-];
 
 const ChatState = ({socket, user, children}) => {
     const initialState = {

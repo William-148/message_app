@@ -1,0 +1,18 @@
+/* CHAT NAVBAR */
+.chat-status{
+    width: 100%;
+    display: flex;
+    padding: 12px 20px;
+    background: #232639;
+}
+
+.chat-status h3 {
+    color: #d6d6d6;
+    font-size: 1rem;
+}
+
+.room-icon {
+    font-size: 20px;
+    margin-right: 10px;
+    color: #fff;
+}

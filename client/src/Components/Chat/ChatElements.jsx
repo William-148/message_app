@@ -10,11 +10,11 @@ const Contact = ({nickname, state, profile}) => {
     );
 }
 
-const Message = ({data, isOwner}) => {
+const Message = ({data, writter, isOwner}) => {
     const ownerClass = !!isOwner ? 'message-owner' : '';
     return (
         <div className={`message ${ownerClass}`}>
-            { !isOwner && <h3>{data.writter}</h3> }
+            { !isOwner && !!writter && <h3>@{ writter }</h3> }
             <div className={`message-text ${ownerClass}`}>
                 <p className={`${ownerClass} ${!!isOwner?"background-owner":""}`}>
                     {data.message}
