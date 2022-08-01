@@ -1,6 +1,6 @@
-import { useEffect, useReducer } from 'react';
-import { reducer } from './chatReducer';
-
+import React, { useReducer, useEffect } from "react";
+import ChatReducer from "./ChatReducer";
+import ChatContext from "./ChatContext";
 const messagesData = [
     {_id:"1", writterId:"1", writter:"Jhoel", message:"hola estoy aqui", time:"12:20 p.m.", date: "Today"},
     {_id:"2", writterId:"2", writter:"Jhoel", message:"hola estoy aqui", time:"12:20 p.m."},
@@ -10,21 +10,16 @@ const messagesData = [
     {_id:"6", writterId:"6", writter:"paradox", message:"hola estoy aqui", time:"12:20 p.m."}
 ];
 
-const useChat = (socket) => {
-
+const ChatState = ({socket, user, children}) => {
     const initialState = {
         message: '',
-        messages: messagesData,
+        messages: [],
         activeUsers: [],
         room: undefined,
         rooms: []
-    }
+    };
 
-    const [state, dispatch] = useReducer(reducer, initialState);
-
-    useEffect(() => {
-        if(!!socket) socket.emit("request_users")
-    }, []);
+    const [state, dispatch] = useReducer(ChatReducer, initialState);
 
     useEffect(()=>{
         if (!socket) return;
@@ -75,6 +70,12 @@ const useChat = (socket) => {
 
     },[state.messages, state.rooms, socket]);
 
+    const requestUsers = () => !!socket && socket.emit("request_users")
+
+    const setMessage = (value) => {
+        dispatch({type: 'message', payload: value});
+    }
+
     const handleMessage = ({target:{value}}) => {
         const char = value.slice(-1);
         if(char === '\n'){
@@ -84,7 +85,7 @@ const useChat = (socket) => {
         dispatch({type: 'message', payload: value});
     }
 
-    const sendMessage = (event, user) => {
+    const sendMessage = (event=null) => {
         if(!!event)event.preventDefault();
         const current = new Date();
         const hours = current.getHours();
@@ -129,14 +130,24 @@ const useChat = (socket) => {
         });
     }
 
-    return [
-        state,
-        dispatch,
-        handleMessage,
-        sendMessage,
-        createRoom,
-        selectRoom
-    ];
+
+    return (
+        <ChatContext.Provider value={{
+            message: state.message,
+            messages: state.messages,
+            activeUsers: state.activeUsers,
+            rooms: state.rooms,
+            room: state.room,
+            handleMessage,
+            setMessage,
+            sendMessage,
+            createRoom,
+            selectRoom,
+            requestUsers
+        }}>
+            {children}
+        </ChatContext.Provider>
+    );
 }
 
-export default useChat;
+export default ChatState;

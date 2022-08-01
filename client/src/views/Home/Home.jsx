@@ -1,13 +1,14 @@
+import io from "socket.io-client";
+import Swal from 'sweetalert2';
 import { useContext, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { FaCuttlefish, FaBars, FaThLarge,
     FaRegCommentAlt, FaWrench, FaSignOutAlt
 } from "react-icons/fa";
-import io from "socket.io-client";
-import Swal from 'sweetalert2';
 import { AsideLink } from "./Components/HomeElements";
-import useToggle from "../../Hooks/useToggle";
 import UserContext from "../../Context/User/UserContext";
+import ChatState from "../../Context/Chat/ChatState";
+import useToggle from "../../Hooks/useToggle";
 import USER from "../../Controllers/User";
 import Api from "../../Config/Api";
 import './Home.css'
@@ -104,7 +105,9 @@ export default function Home() {
             </aside>
             <section className="home-content">
                 {/* Background:  https://www.svgbackgrounds.com/*/}
-                <Outlet />
+                <ChatState socket={socket} user={user}>
+                    <Outlet />
+                </ChatState>
             </section>
         </>
     );    

@@ -1,5 +1,5 @@
 
-export const reducer = (state, action) => {
+export default (state, action) => {
     const {payload, type} = action;
     switch(type){
         case 'message':
@@ -27,6 +27,7 @@ export const reducer = (state, action) => {
                 ...state,
                 room: payload
             }
-        default: return state;
+        default:
+            return state;
     }
 }

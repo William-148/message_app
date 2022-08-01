@@ -6,8 +6,9 @@ import { BiHappyBeaming, BiRightArrowCircle, BiChat,
 } from "react-icons/bi";
 import { Contact, Message } from './Components/ChatElements';
 import UserContext from "../../Context/User/UserContext";
+import ChatContext from "../../Context/Chat/ChatContext";
 import useToggle from "../../Hooks/useToggle";
-import useChat from "../../Hooks/Chat/useChat";
+//import useChat from "../../Hooks/Chat/useChat";
 import Picker from "emoji-picker-react";
 
 import './Chat.css'
@@ -15,20 +16,25 @@ import './Chat.css'
 
 export default function Chat() {
 
-    const { socket, user } = useContext(UserContext);
+    const { user } = useContext(UserContext);
+    const {
+        message, messages, activeUsers, rooms, room, 
+        handleMessage, 
+        setMessage,
+        sendMessage,
+        createRoom,
+        selectRoom,
+        requestUsers
+     } = useContext(ChatContext);
+
     const lastMessageRef = useRef();
 
     const [sidebarActive, setSidebarActive] = useToggle(true);
     const [showEmoji, setShowEmoji] = useToggle(false);
 
-    const [
-        {message, messages, activeUsers, rooms, room}, 
-        dispatch, 
-        handleMessage, 
-        sendMessage,
-        createRoom,
-        selectRoom
-    ] = useChat(socket);
+    useEffect(()=>{
+        requestUsers();
+    },[])
 
     useEffect(()=>{
         updateView();
@@ -50,10 +56,7 @@ export default function Chat() {
     }
 
     const onEmojiClick = (event, emojiObject) => {
-        dispatch({
-            type: "message",
-            payload: message + emojiObject.emoji
-        });
+        setMessage(message + emojiObject.emoji);
     }
 
     return (
@@ -86,7 +89,7 @@ export default function Chat() {
                     </div>
                     <div className="chat-rooms">
                         <div className="room-title">
-                            <h3>Rooms</h3>
+                            <h3>Room</h3>
                             <span title="Create new room"
                                 onClick={newRoom}
                             >
@@ -120,7 +123,7 @@ export default function Chat() {
                     : <BiChat className="btn-sidebar-chat" onClick={setSidebarActive}/> 
                 }
                 <nav className="chat-status">
-                    <h3>Room </h3>
+                    <h3>{!!room ? `Room: ${room.name}`: 'Select a Room'}</h3>
                 </nav>
                 <section className="chat-message" >
                     <div className="message-content" ref={lastMessageRef} >
