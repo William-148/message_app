@@ -13,6 +13,7 @@ import Home from "./views/Home/Home";
 import Inbox from "./views/Chat/Inbox";
 import UserState from "./Context/User/UserState";
 import UserContext from "./Context/User/UserContext";
+import NotFound from "./Views/NotFound/NotFound";
 import USER from "./Controllers/User";
 import './App.css';
 
@@ -48,7 +49,7 @@ function App() {
                     <Route path="inbox"  element={<Inbox />}/>
                     <Route path="settings"  element={<div><h1>Configuraciones</h1></div>}/>
                 </Route>
-                <Route path='*' element={<h1 style={{color:"#fff"}}>Not Found</h1>}/>
+                <Route path='*' element={<NotFound />}/>
             </Routes>
         </BrowserRouter>
     );

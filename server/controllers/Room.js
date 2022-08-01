@@ -67,7 +67,7 @@ class Room{
         return messages.map((msg, index) => 
             this.createMsgObject(msg, 
                 (index === 0 
-                ? (isToday ? 'Today' : this.getDate)
+                ? (isToday ? 'Today' : this.getDate(msg.createdAt))
                 : undefined)
             )
         );
