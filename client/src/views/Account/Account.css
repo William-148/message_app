@@ -153,3 +153,25 @@ background: linear-gradient(338deg, rgba(83,13,175,1) 0%, rgba(56,92,200,1) 100%
 .signup a:hover {
     color: rgb(70, 70, 70);
 }
+
+@media only screen and (max-width: 900px) {
+    .login-component {
+        padding: 5% 5% 20% 5%;
+    }
+
+}
+
+@media only screen and (max-width: 500px) {
+    .login-component {
+        padding: 5% 5% 20% 5%;
+    }
+
+    .login-content aside {
+        display: none;
+    }
+
+    .login-content section {
+        width: 100%;
+        border-radius:10px;
+    }
+}
