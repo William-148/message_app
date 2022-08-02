@@ -3,6 +3,7 @@ import { Message } from "../ChatElements";
 import ChatContext from "../../../Context/Chat/ChatContext";
 import UserContext from "../../../Context/User/UserContext";
 import "./ViewMessage.css";
+import { useState } from "react";
 
 const MessageDate = ({date}) => {
     return (
@@ -15,38 +16,60 @@ const MessageDate = ({date}) => {
 
 export default function ViewMessage() {
 
-    const { messages } = useContext(ChatContext);
-    const { user } = useContext(UserContext);
-
     const lastMessageRef = useRef();
+    const { messages, requestOldMessages } = useContext(ChatContext);
+    const { user } = useContext(UserContext);
+    const [ isBottom, setIsBottom ] = useState(true);
+    const [ loadInit, setLoadInit ] = useState(false);
 
     useEffect(()=>{
-        updateView();
+        requestOldMessages();
+    },[loadInit]);
+
+    useEffect(()=>{
+        if(isBottom) updateView();
+        if(!!lastMessageRef.current && !loadInit){
+            const { scrollTop } = lastMessageRef.current;
+            if(scrollTop === 0) setLoadInit(true);
+        }
     },[messages]);
 
     const updateView = () => {
         if(!!lastMessageRef) lastMessageRef.current.scrollIntoView(false);
     }
-    
-    const showMessages = () =>{
-        let writter = '', current = '';
-        return messages.map((data, index) => {
-            writter = undefined;
-            if(!data.date && current !== data.writter){
-                current = writter = data.writter;
-            } 
-            return !data.date ?
-                <Message key={!!data._id ? data._id : index} 
-                    writter={writter}
-                    data={data} 
-                    isOwner={user._id === data.writterId}
-                />
-            : <MessageDate key={index} date={data.date}/>
-        })
+
+    const handleScroll = (e) => {
+        const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+        setIsBottom(false);
+        if(scrollTop === 0) {
+            requestOldMessages();
+            return;
+        }
+        const bottom = scrollTop + clientHeight - scrollHeight;
+        if (bottom < 1 && bottom > -1 ) setIsBottom(true);
+    } 
+
+    const showMessages = () => {
+        let current = '', date;
+        return messages.map(
+            (data) => {
+                date = undefined;
+                if(current !== data.date) 
+                    current = date = data.date;
+                return <div key={data._id} >
+                    {!!date && <MessageDate date={date}/>}
+                    <Message 
+                        writter={data.writter}
+                        data={data} 
+                        isOwner={user._id === data.writterId}
+                    />
+                </div>
+            }
+        )
     }
 
     return (
-        <section className="chat-message" >
+        <section className="chat-message" onScroll={handleScroll}>
             <div className="message-content" ref={lastMessageRef} >
                 {showMessages()}
             </div>

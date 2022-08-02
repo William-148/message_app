@@ -10,7 +10,18 @@ export default (state, action) => {
         case 'messages':
             return{
                 ...state,
-                messages: payload
+                messages: payload.messages,
+                lastTimestamp: payload.lastTimestamp
+            }
+        case 'addMessage':
+            return{
+                ...state,
+                messages: payload,
+            }
+        case 'lastTimestamp':
+            return{
+                ...state,
+                lastTimestamp: payload
             }
         case 'activeUsers':
             return {

@@ -6,6 +6,7 @@ const ChatState = ({socket, user, children}) => {
     const initialState = {
         message: '',
         messages: [],
+        lastTimestamp: '',
         activeUsers: [],
         room: undefined,
         rooms: []
@@ -43,16 +44,18 @@ const ChatState = ({socket, user, children}) => {
             });
         });
 
-        socket.on("srv:getCurrentMsg", (msgs) => {
+        socket.on("srv:getCurrentMsg", (payload) => {
             dispatch({
                 type: 'messages',
-                payload: msgs
+                payload
             });
         });
 
+        
+
         socket.on("srv:chat", (msg) => {
             dispatch({
-                type: 'messages',
+                type: 'addMessage',
                 payload: [
                     ...state.messages,
                     msg
@@ -66,6 +69,34 @@ const ChatState = ({socket, user, children}) => {
 
     const setMessage = (value) => {
         dispatch({type: 'message', payload: value});
+    }
+
+    const requestOldMessages = () => {
+        if(state.lastTimestamp === '') return;
+        socket.emit('cl:old_messages', {
+            roomId: state.room._id,
+            timestamp: state.lastTimestamp
+        })
+        socket.on("srv:old_messages", (payload) => {
+            if(payload.lastTimestamp === ''){
+                dispatch({
+                    type: 'lastTimestamp',
+                    payload: payload.lastTimestamp
+                });
+            }
+            else{
+                dispatch({
+                    type: 'messages',
+                    payload:{
+                        messages: [
+                            ...payload.messages,
+                            ...state.messages
+                        ],
+                        lastTimestamp: payload.lastTimestamp
+                    } 
+                });
+            }
+        });
     }
 
     const handleMessage = ({target:{value}}) => {
@@ -135,7 +166,8 @@ const ChatState = ({socket, user, children}) => {
             sendMessage,
             createRoom,
             selectRoom,
-            requestUsers
+            requestUsers,
+            requestOldMessages
         }}>
             {children}
         </ChatContext.Provider>

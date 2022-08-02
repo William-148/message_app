@@ -6,6 +6,7 @@ import cors from 'cors';
 import { connectDB } from './db/config.js';
 import routes from './routes/UserRoutes.js';
 import socket from './controllers/Socket.js';
+import Room from './controllers/Room.js';
 import { PORT } from './config.js'
 
 connectDB();
@@ -29,11 +30,9 @@ app.get('/', (req, res) => {
 });
 
 app.post('/test', async (req, res) => {
-    // const data = new Message(req.body);
-    // const result = await data.save();
-    // console.log(result)
-    // console.log(finded);
-    res.status(200).send({message:"Test app!!", data});
+    // const finded = await Room.getFirstMessages("62e621345912a57281945bb0");
+    const finded = await Room.getMessagesBelowDate("62e621345912a57281945bb0", "2022-08-02T06:02:08.399Z");
+    res.status(200).send({message:"Test app!!", finded});
 });
 
 app.use('/', routes)

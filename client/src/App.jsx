@@ -13,6 +13,7 @@ import Home from "./views/Home/Home";
 import Inbox from "./views/Chat/Inbox";
 import UserState from "./Context/User/UserState";
 import UserContext from "./Context/User/UserContext";
+import Settings from "./Views/Settings/Settings";
 import NotFound from "./Views/NotFound/NotFound";
 import USER from "./Controllers/User";
 import './App.css';
@@ -47,7 +48,7 @@ function App() {
                 } >
                     <Route index  element={<div><h2>Init</h2></div>}/>
                     <Route path="inbox"  element={<Inbox />}/>
-                    <Route path="settings"  element={<div><h1>Configuraciones</h1></div>}/>
+                    <Route path="settings"  element={<Settings />}/>
                 </Route>
                 <Route path='*' element={<NotFound />}/>
             </Routes>

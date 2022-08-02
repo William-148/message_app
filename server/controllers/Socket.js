@@ -45,14 +45,18 @@ const startSocket = (io) => {
     
         socket.on("cl:join_room", async (roomId) => {
             socket.join(roomId);
-            const msgs = await ROOM.getTodayMessages(roomId);
-            socket.emit('srv:getCurrentMsg', msgs);
+            const msgs = await ROOM.getFirstMessages(roomId);
+            if(!!msgs)socket.emit('srv:getCurrentMsg', msgs);
         });
     
         socket.on("cl:message", async(payload) => {
             const result = await ROOM.saveMessage(payload)
-            if(!result) return;
-            io.to(payload.roomId).emit('srv:chat', result);
+            if(!!result) io.to(payload.roomId).emit('srv:chat', result);
+        });
+
+        socket.on("cl:old_messages", async(payload) => {
+            const result = await ROOM.getMessagesBelowDate(payload.roomId, payload.timestamp);
+            if(!!result) socket.emit('srv:old_messages', result);
         });
     });
 }

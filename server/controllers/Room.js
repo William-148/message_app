@@ -1,24 +1,36 @@
 import RoomModel from "../models/Room.js";
 import Message from "../models/Message.js";
-import CryptoJS  from "crypto-js";
 import '../config.js'
 
-const { SECRET_KEY } = process.env;
-
 class Room{
-    getTime (timestamp){
+    LIMIT_MESSAGES = 20;
+
+    getDateTime (timestamp){
         const date = new Date(timestamp);
         const hours = date.getHours();
         const minutes = date.getMinutes();
-        return `${hours}:${minutes > 9 ? minutes : '0' + minutes}`
+        return [
+            this.getDate(date),
+            `${hours}:${minutes > 9 ? minutes : '0' + minutes}`
+        ]
     }
 
-    getDate (timestamp){
-        const date = new Date(timestamp);
+    isDateEqual(a, b){
+        return a.getYear() === b.getYear() 
+            && a.getMonth() === b.getMonth()
+            && a.getDate() === b.getDate();
+
+    }
+
+    getDate (date){
+        const now = new Date();
+        if(this.isDateEqual(date, now)) return 'Today';
+        now.setDate(now.getDate() - 1);
+        if(this.isDateEqual(date, now)) return 'Yesterday';
         const month = date.getUTCMonth() + 1; //months from 1-12
-        const day = date.getUTCDate();
+        const day = date.getDate();
         const year = date.getUTCFullYear();
-        return year + "/" + month + "/" + day;
+        return day + "/" + month + "/" + year;
     }
 
     async create(name){
@@ -41,13 +53,14 @@ class Room{
         }
     }
 
-    createMsgObject(msg, date=undefined){
+    createMsgObject(msg, writter){
+        const [date, time] = this.getDateTime(msg.createdAt);
         return {
             _id: '' + msg._id,
             writterId: msg.writterId,
-            writter: msg.writter,
+            writter,
             message: msg.message,
-            time: this.getTime(msg.createdAt),
+            time,
             date
         }
     }
@@ -63,25 +76,46 @@ class Room{
         }
     }
 
-    transformMessages(messages, isToday=false){
-        return messages.map((msg, index) => 
-            this.createMsgObject(msg, 
-                (index === 0 
-                ? (isToday ? 'Today' : this.getDate(msg.createdAt))
-                : undefined)
-            )
-        );
+    transformMessages(messages){
+        let currentWritter = '', writter;
+        const data = messages.map((msg) => {
+            //date = writter = undefined;
+            writter = undefined;
+            if(currentWritter !== msg.writter){
+                currentWritter = writter = msg.writter;
+            }
+            /*
+            const msgDate = (""+msg.createdAt).substring(0, 16);
+            if(currentDate !== msgDate){
+                currentDate = msgDate;
+                date = msg.createdAt;
+            }
+            */
+            return this.createMsgObject(msg, writter)
+        });
+        return {
+            messages: data,
+            lastTimestamp: messages.length > 0 ? messages[0].createdAt : ''
+        }
     }
 
-    async getMessagesByRange(roomId, startDate, endDate){
+    async getMessagesBelowDate(roomId, timestamp){
         try {
-            const finded = await Message.find({
-                roomId,
-                createdAt: {
-                    $gt: startDate,
-                    $lt: endDate
+            const finded = await Message.find(
+                {
+                    roomId,
+                    createdAt: {
+                        //$gt: startDate,
+                        $lt: timestamp
+                    }
+                },
+                null,
+                {
+                    sort: {$natural: -1},
+                    limit: this.LIMIT_MESSAGES
                 }
-            });
+            );
+            finded.reverse();
             return this.transformMessages(finded);
         } catch (error) {
             console.error(error);
@@ -89,14 +123,17 @@ class Room{
         }
     }
 
-    async getTodayMessages(roomId){
+    async getFirstMessages(roomId){
         try {
-            const date = new Date();
-            date.setDate(date.getDate() - 1);
-            const finded = await Message.find({
-                roomId,
-                createdAt: {$gt: date}
-            });
+            const finded = await Message.find(
+                {roomId}, 
+                null, 
+                {
+                    sort: {$natural: -1}, 
+                    limit: this.LIMIT_MESSAGES,
+                }
+            );
+            finded.reverse();
             return this.transformMessages(finded, true);
         } catch (error) {
             console.error(error);
