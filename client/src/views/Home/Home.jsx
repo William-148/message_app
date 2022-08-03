@@ -30,6 +30,7 @@ export default function Home() {
 
     useEffect(() => {
         if(!socket) initSocket(io(HOST));
+        if(window.innerWidth > 768) setSidebarActive();
         // Redirect to current route when the page is reload
         navigate(state?.state?.pathname ?? '/desktop')
     }, []);

@@ -32,7 +32,7 @@ const ChatState = ({socket, user, children}) => {
         socket.on("srv:get_room", (room) => {
             dispatch({
                 type: 'rooms',
-                payload: [...rooms, room]
+                payload: [...state.rooms, room]
             });
         });
 
@@ -51,25 +51,30 @@ const ChatState = ({socket, user, children}) => {
             });
         });
 
-        
-
         socket.on("srv:chat", (msg) => {
             dispatch({
                 type: 'addMessage',
                 payload: [
                     ...state.messages,
-                    msg
+                    defineMessage(msg)
                 ]
             });
         });
 
     },[state.messages, state.rooms, socket]);
 
+    const defineMessage = (msg) => {
+        const lastmsg = state.messages.slice(-1)[0];
+        if(!!lastmsg && lastmsg.writterId === msg.writterId){
+            const { writter, ...newMsg } = msg;
+            return newMsg;
+        }
+        return msg;
+    }
+
     const requestUsers = () => !!socket && socket.emit("request_users")
 
-    const setMessage = (value) => {
-        dispatch({type: 'message', payload: value});
-    }
+    const setMessage = (value) => dispatch({type: 'message', payload: value});
 
     const requestOldMessages = () => {
         if(state.lastTimestamp === '') return;
@@ -120,13 +125,7 @@ const ChatState = ({socket, user, children}) => {
             message: state.message, 
             time:`${hours}:${minutes < 10 ? `0${minutes}`: minutes}`
         }
-        /*
-        dispatch({ type: 'messages',  payload: [
-                ...state.messages,
-                newMsg
-            ]
-        });
-        */
+        
         socket.emit('cl:message', newMsg)
         dispatch({type: 'message', payload: ''});
     }

@@ -39,8 +39,7 @@ const startSocket = (io) => {
             }
             socket.join('' + room._id);
             socket.emit('srv:get_room', room);
-            const rooms = await ROOM.getAll();
-            socket.broadcast.emit('srv:updateRooms', rooms);
+            socket.broadcast.emit('srv:get_room', room);
         });
     
         socket.on("cl:join_room", async (roomId) => {

@@ -13,25 +13,15 @@ const MessageDate = ({date}) => {
     )
 }
 
-
 export default function ViewMessage() {
 
     const lastMessageRef = useRef();
     const { messages, requestOldMessages } = useContext(ChatContext);
     const { user } = useContext(UserContext);
     const [ isBottom, setIsBottom ] = useState(true);
-    const [ loadInit, setLoadInit ] = useState(false);
-
-    useEffect(()=>{
-        requestOldMessages();
-    },[loadInit]);
 
     useEffect(()=>{
         if(isBottom) updateView();
-        if(!!lastMessageRef.current && !loadInit){
-            const { scrollTop } = lastMessageRef.current;
-            if(scrollTop === 0) setLoadInit(true);
-        }
     },[messages]);
 
     const updateView = () => {
@@ -42,11 +32,12 @@ export default function ViewMessage() {
         const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
         setIsBottom(false);
         if(scrollTop === 0) {
+            e.currentTarget.scrollTop = 2;
             requestOldMessages();
             return;
         }
         const bottom = scrollTop + clientHeight - scrollHeight;
-        if (bottom < 1 && bottom > -1 ) setIsBottom(true);
+        if (bottom < 15 && bottom > -15 ) setIsBottom(true);
     } 
 
     const showMessages = () => {

@@ -3,7 +3,7 @@ import Message from "../models/Message.js";
 import '../config.js'
 
 class Room{
-    LIMIT_MESSAGES = 20;
+    LIMIT_MESSAGES = 30;
 
     getDateTime (timestamp){
         const date = new Date(timestamp);
@@ -69,7 +69,7 @@ class Room{
         try {
             const data = new Message(message);
             const result = await data.save();
-            return this.createMsgObject(result);
+            return this.createMsgObject(result, result.writter);
         } catch (error) {
             console.error(error);
             return null;
@@ -79,18 +79,10 @@ class Room{
     transformMessages(messages){
         let currentWritter = '', writter;
         const data = messages.map((msg) => {
-            //date = writter = undefined;
             writter = undefined;
             if(currentWritter !== msg.writter){
                 currentWritter = writter = msg.writter;
             }
-            /*
-            const msgDate = (""+msg.createdAt).substring(0, 16);
-            if(currentDate !== msgDate){
-                currentDate = msgDate;
-                date = msg.createdAt;
-            }
-            */
             return this.createMsgObject(msg, writter)
         });
         return {

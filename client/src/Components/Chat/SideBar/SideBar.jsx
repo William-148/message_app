@@ -13,6 +13,7 @@ export default function SideBar(){
         activeUsers, 
         rooms,
         selectRoom,
+        createRoom
      } = useContext(ChatContext);
 
      const newRoom = async () => {

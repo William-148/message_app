@@ -15,8 +15,12 @@ const Message = ({data, writter, isOwner}) => {
     return (
         <div className={`message ${ownerClass}`}>
             { !isOwner && !!writter && <h3>@{ writter }</h3> }
-            <div className={`message-text ${ownerClass}`}>
-                <p className={`${ownerClass} ${!!isOwner?"background-owner":""}`}>
+            <div className={`message-text ${ownerClass}`} >
+                <p className={
+                        `${ownerClass} ${!!isOwner?"background-owner":""}`
+                    }
+                    style={!writter ? borderOwner : {}}
+                >
                     {data.message}
                 </p>
             </div>
@@ -25,6 +29,10 @@ const Message = ({data, writter, isOwner}) => {
             </span>
         </div>
     );
+}
+
+const borderOwner = {
+    borderRadius: "10px"
 }
 
 export {Contact, Message}
