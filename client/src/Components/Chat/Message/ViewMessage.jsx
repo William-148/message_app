@@ -5,24 +5,18 @@ import UserContext from "../../../Context/User/UserContext";
 import "./ViewMessage.css";
 import { useState } from "react";
 
-const MessageDate = ({date}) => {
-    return (
-        <div className="msg-date-content">
-            <h2 className="msg-date">{date}</h2>
-        </div>
-    )
-}
-
 export default function ViewMessage() {
 
     const lastMessageRef = useRef();
-    const { messages, requestOldMessages } = useContext(ChatContext);
+    const { messages, requestOldMessages, room } = useContext(ChatContext);
     const { user } = useContext(UserContext);
     const [ isBottom, setIsBottom ] = useState(true);
 
     useEffect(()=>{
         if(isBottom) updateView();
     },[messages]);
+
+    useEffect(() => setIsBottom(true), [room]);
 
     const updateView = () => {
         if(!!lastMessageRef) lastMessageRef.current.scrollIntoView(false);
@@ -65,5 +59,13 @@ export default function ViewMessage() {
                 {showMessages()}
             </div>
         </section>
+    )
+}
+
+const MessageDate = ({date}) => {
+    return (
+        <div className="msg-date-content">
+            <h2 className="msg-date">{date}</h2>
+        </div>
     )
 }

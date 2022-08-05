@@ -1,0 +1,80 @@
+
+.setting-input-content{
+    margin-bottom: 15px;
+    width: 100%;
+    transition: all 0.1s ease;
+}
+
+.setting-input-content label{
+    color: #fff;
+    font-size: 0.8em;
+    margin-bottom: 10px;
+}
+
+.setting-input{
+    display: flex;
+    padding: 0;
+}
+
+.setting-input input{
+    width: 100%;
+    outline: none;
+    border: none;
+    padding: 10px 10px;
+    background: none;
+    border-bottom: solid 2px #00000000;
+    color: #fff;
+}
+
+
+input:-internal-autofill-selected {
+    background-color: transparent !important;
+}
+
+.setting-input input:focus {
+    background: none;
+    border-bottom: solid 2px #05eaff;
+}
+
+/* Buttons and Icons*/
+.button-accept{
+    display: flex;
+    justify-content: flex-end;
+    max-height: 35px;
+    transition: all 0.5s linear;
+}
+
+.button-hidden{
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+}
+
+.icon-hidden{
+    visibility: hidden;
+    opacity: 0;
+    width: 0;
+}
+
+.setting-input button, .button-accept button{
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.setting-input .input-icon, .button-accept .input-icon {
+    margin: auto;
+    color: #fff;
+    height: 25px;
+    font-size: 1.1em;
+    margin-right: 5px;
+}
+
+.edit-icon{
+    margin-left: 10px !important;
+}
+
+.edit-icon:hover{
+    color:#01ddff;
+}

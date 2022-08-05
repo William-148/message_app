@@ -44,7 +44,7 @@
 }
 
 .active-navlink, .active-navlink:hover {
-    background: #00000040;
+    background: #171a26;
     cursor: unset;
 }
 
@@ -154,7 +154,6 @@
     align-items: center;
     text-decoration: none;
     transition: 0.1s;
-    border-radius: 8px;
     border: none;
     width: 50px;
     white-space: nowrap;
@@ -165,8 +164,8 @@
 }
 
 .sidebar ul li a:hover{
-    color: #323653;
-    background: #7f6bb0;
+    color: #bababa;
+    background: #2f3e5c;
 }
 
 .sidebar ul li .ico {

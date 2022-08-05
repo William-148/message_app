@@ -13,4 +13,9 @@ api.post('/signin', async (req, res) => {
     res.status(status).send({msg, data});
 });
 
+api.put('/update', async (req, res) => {
+    const {status, msg} = await user.update(req.body);
+    res.status(status).send({msg});
+});
+
 export default api;

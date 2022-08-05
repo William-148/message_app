@@ -1,5 +1,68 @@
 .setting-body{
-    background: #1c203eb3;
+    background: #1c203e89;
     width: 100%;
     height: 100%;
+    overflow: auto;
+}
+
+.setting-container {
+    width: 60%;
+    margin: 0 auto;
+    padding: 3% 0 10px 0;
+}
+
+.setting-title{
+    margin-bottom: 5px;
+}
+
+.setting-title h1{
+    color:#c8c8c8;
+    font-size: 1em;
+    margin-left: 10px;
+    font-family: sans-serif;
+    font-weight: 100;
+}
+
+.setting-content{
+    margin-bottom: 30px;
+    padding: 15px 30px;
+    border-radius: 5px;
+    background: #0000005d;
+    display: flex;
+}
+
+.img-container{
+    display: flex;
+    margin-right: 30px;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-container img{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: solid 2px #9358bd;
+}
+
+.setting-content form{
+    width: 100%;
+}
+
+@media only screen and (max-width: 650px) {
+    .setting-container {
+        width: 95%;
+        margin: 0 auto;
+        padding: 5% 0;
+    }
+
+    .setting-content{
+        flex-wrap: wrap;
+    }
+
+    .img-container{
+        margin-right: 0;
+        margin-bottom: 20px;
+        width: 100%;
+    }
 }

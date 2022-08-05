@@ -21,12 +21,14 @@ const ChatState = ({socket, user, children}) => {
         });
 
         socket.on("getAllUsers", (users) => {
-            dispatch({type: 'activeUsers', payload: users});
+            const usersWithoutMe = users.filter((item)=>item.id !== user._id);
+            dispatch({type: 'activeUsers', payload: usersWithoutMe});
         });
         
         // Real time
         socket.on("updateUsers", (users) => {
-            dispatch({type: 'activeUsers', payload: users});
+            const usersWithoutMe = users.filter((item)=>item.id !== user._id);
+            dispatch({type: 'activeUsers', payload: usersWithoutMe});
         });
         
         socket.on("srv:get_room", (room) => {

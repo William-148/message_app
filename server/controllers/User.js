@@ -29,7 +29,7 @@ class User{
         try{
             const finded = await UserModel.findOne({email});
             if(!finded) return { 
-                status:404, 
+                status: 404, 
                 msg: "User doesn't exist or incorrect."
             }
             if(!this.passIsCorrect(password, finded.password)) 
@@ -40,13 +40,38 @@ class User{
             
             const{_id, name, nickname, photo, state} = finded;
             return { 
-                status:200, 
-                msg:"Successful sign in.",
-                data: {_id, name, nickname, photo, state, email: finded.email}
+                status: 200, 
+                msg: "Successful sign in.",
+                data: { _id, name, nickname, photo, state, email: finded.email }
             }
         }catch(error){
             console.error(error);
             return {status:500, msg: error.message}
+        }
+    }
+
+    async update(user){
+        try {
+            const { _id, email, ...toUpdate } = user;
+            if(!!email) return { status: 400, msg: "Email can't be updated." }
+            
+            const result = await UserModel.updateOne(
+                {_id}, 
+                typeof toUpdate === 'object' ? toUpdate : {toUpdate}
+            )
+
+            if(result?.matchedCount === 1) return {
+                status: 200,
+                msg: "The field was updated."
+            }
+
+            return {
+                status: 400,
+                msg: "Could not update."
+            }
+        } catch (error) {
+            console.error(error);
+            return { status: 500, msg: error.message }
         }
     }
 

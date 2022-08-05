@@ -55,7 +55,7 @@
     margin-right: auto;
 }
 
-.chat-members .members-list{
+.chat-members .members-lis{
     padding: 0 5px 0 0;
     max-height: 220px;
     width: 100%;
@@ -69,7 +69,7 @@
     overflow-y: auto;
 }
 
-.rooms-list li {
+.rooms-list li, .members-list li {
     display: flex;
     gap: 5px;
     cursor: pointer;
@@ -120,4 +120,17 @@
 .member section p{
     color: rgb(207, 207, 207);
     font-size: 0.8rem;
+}
+
+.members-list li span {
+    color: #00eaff;
+    font-size: 15px;
+    line-height: 14px;
+}
+
+.members-list li h2 {
+    color: #fff;
+    font-size: 15px;
+    line-height: 14px;
+    font-weight: lighter;
 }
