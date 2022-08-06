@@ -2,8 +2,8 @@ import io from "socket.io-client";
 import Swal from 'sweetalert2';
 import { useContext, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { FaCuttlefish, FaBars, FaThLarge,
-    FaRegCommentAlt, FaWrench, FaSignOutAlt
+import { FaHtml5, FaBars, FaThLarge,
+    FaCommentAlt, FaWrench, FaSignOutAlt
 } from "react-icons/fa";
 import { AsideLink } from "./Components/HomeElements";
 import UserContext from "../../Context/User/UserContext";
@@ -17,7 +17,7 @@ const { HOST } = Api;
 
 const links = [
     { title: "Home", to: "", end:true, icon: <FaThLarge className="ico" />},
-    { title: "Chat", to: "inbox", icon: <FaRegCommentAlt className="ico" /> },
+    { title: "Chat", to: "inbox", icon: <FaCommentAlt className="ico" /> },
     { title: "Setting", to: "settings", icon: <FaWrench className="ico" /> }
 ];
 
@@ -76,8 +76,7 @@ export default function Home() {
             <aside className={`sidebar ${sidebarActive ? 'menu-active': ''}`}>
                 <nav className="logo-content">
                     <div className="logo">
-                        <FaCuttlefish className="ico"/>
-                        <div className="logo-name">Code</div>
+                        <FaHtml5 className="ico"/>
                     </div>
                     <FaBars id="btn-menu" onClick={setSidebarActive}/>
                 </nav>
