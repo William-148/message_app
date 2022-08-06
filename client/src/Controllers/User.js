@@ -17,8 +17,20 @@ class User extends Control{
         if(status === 500) return this.ERROR500;
         if(status >= 400) return {...content, success:false};
         //Saving user data in localstorage
-        this.setItem(this.ITEM_USER, content.data);
+        this.saveLocalUser(content.data);
         return {...content, success:true};
+    }
+
+    async update(user){
+        const {status, content} = await this.request('PUT', AUTH.update, user);
+        if(status === 500) return this.ERROR500;
+        if(status >= 400) return {...content, success:false};
+        return {...content, success:true};
+    }
+
+    saveLocalUser(user){
+        //Saving user data in localstorage
+        this.setItem(this.ITEM_USER, user);
     }
 
     getUser(){

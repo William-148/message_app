@@ -15,6 +15,7 @@ import UserState from "./Context/User/UserState";
 import UserContext from "./Context/User/UserContext";
 import Settings from "./Views/Settings/Settings";
 import NotFound from "./Views/NotFound/NotFound";
+import Start from "./Views/Start/Start";
 import USER from "./Controllers/User";
 import './App.css';
 
@@ -46,7 +47,7 @@ function App() {
                 <Route path="/desktop" element={
                     <Protected element={<Home/>} />
                 } >
-                    <Route index  element={<div><h2>Init</h2></div>}/>
+                    <Route index  element={<Start />}/>
                     <Route path="inbox"  element={<Inbox />}/>
                     <Route path="settings"  element={<Settings />}/>
                 </Route>

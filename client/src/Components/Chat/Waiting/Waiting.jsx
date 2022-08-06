@@ -7,7 +7,6 @@ export default function Waiting(){
                 <div className="waiting-logo">
                     <img src={image} alt="" />
                 </div>
-                <h1 className="waiting-title">Message Faker</h1>
                 <p className="waiting-description">
                     You can send messages to people who are online.
                 </p>

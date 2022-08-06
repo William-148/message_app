@@ -16,7 +16,7 @@ const { HOST } = Api;
 // https://react-icons.github.io/react-icons/icons?name=bi
 
 const links = [
-    { title: "Dashboard", to: "", end:true, icon: <FaThLarge className="ico" />},
+    { title: "Home", to: "", end:true, icon: <FaThLarge className="ico" />},
     { title: "Chat", to: "inbox", icon: <FaRegCommentAlt className="ico" /> },
     { title: "Setting", to: "settings", icon: <FaWrench className="ico" /> }
 ];

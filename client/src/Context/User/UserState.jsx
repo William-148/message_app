@@ -32,13 +32,26 @@ const UserState = (props) => {
         });
     }
 
+    const updateUser = (fields, callback) => {
+        const userUpdated = {
+            ...state.user,
+            ...fields
+        }
+        dispatch({
+            type: 'SIGNIN',
+            payload: userUpdated
+        });
+        callback(userUpdated);
+    }
+
     return (
         <UserContext.Provider value={{
             user: state.user,
             socket: state.socket,
             initSocket,
             signin,
-            signout
+            signout,
+            updateUser
         }}>
             {props.children}
         </UserContext.Provider>

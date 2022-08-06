@@ -54,11 +54,11 @@ class User{
         try {
             const { _id, email, ...toUpdate } = user;
             if(!!email) return { status: 400, msg: "Email can't be updated." }
+            if(!!toUpdate.password){
+                toUpdate.password = CryptoJS.AES.encrypt(toUpdate.password, SECRET_KEY).toString();
+            }
             
-            const result = await UserModel.updateOne(
-                {_id}, 
-                typeof toUpdate === 'object' ? toUpdate : {toUpdate}
-            )
+            const result = await UserModel.updateOne({_id}, toUpdate);
 
             if(result?.matchedCount === 1) return {
                 status: 200,

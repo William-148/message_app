@@ -5,6 +5,7 @@
     padding: 10px 10%;
     display: flex;
     overflow-y: auto;
+    background: #00000068;
 }
 
 .message-content {
@@ -36,7 +37,7 @@
 }
 
 .message h3 {
-    color: #00eaff;
+    color: #fff;
     font-size: 0.9rem;
     font-weight: 400;
     margin-top: 20px;
@@ -59,19 +60,20 @@
 .message .message-text p {
     max-width: 60%;
     padding: 8px 15px;
-    border-radius: 0 15px 15px 10px;
+    border-radius: 0 8px 8px 10px;
     font-size: 1rem;
-    color: #b9b9b9;
-    background:#1d24379d;
+    color: #ffffff;
+    background:#343145;
 }
 
 .message .message-owner {
     margin-left: auto;
-    border-radius: 15px 0 10px 15px !important;
+    border-radius: 8px 0 8px 8px !important;
 }
 
 .background-owner {
-    background:rgba(185, 35, 211, 1) !important;
+    background: #1a53fc!important;
+    background: linear-gradient(90deg, rgba(52,133,253,1) 0%, rgba(26,83,252,1) 100%) !important;
 }
 
 @media only screen and (max-width: 768px) {

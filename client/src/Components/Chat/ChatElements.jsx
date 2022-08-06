@@ -1,3 +1,5 @@
+import { FaUserCircle } from "react-icons/fa";
+
 const Contact = ({nickname, state, profile}) => {
     return(
         <div className="member">
@@ -14,7 +16,12 @@ const Message = ({data, writter, isOwner}) => {
     const ownerClass = !!isOwner ? 'message-owner' : '';
     return (
         <div className={`message ${ownerClass}`}>
-            { !isOwner && !!writter && <h3>@{ writter }</h3> }
+            { !isOwner && !!writter 
+                && <h3>
+                    <FaUserCircle color="#ff7300"/>
+                    { " " + writter }
+                </h3> 
+            }
             <div className={`message-text ${ownerClass}`} >
                 <p className={
                         `${ownerClass} ${!!isOwner?"background-owner":""}`

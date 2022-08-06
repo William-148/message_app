@@ -39,8 +39,7 @@ export default function ViewMessage() {
         return messages.map(
             (data) => {
                 date = undefined;
-                if(current !== data.date) 
-                    current = date = data.date;
+                if(current !== data.date) current = date = data.date;
                 return <div key={data._id} >
                     {!!date && <MessageDate date={date}/>}
                     <Message 

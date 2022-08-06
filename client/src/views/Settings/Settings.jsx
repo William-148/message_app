@@ -1,21 +1,23 @@
 import { useContext } from "react";
 import { FaUserAlt, FaIdCard, FaEnvelope, FaExpeditedssl, FaLaugh } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
 import UserContext from "../../Context/User/UserContext";
 import useForm from "../../Hooks/useForm";
 import SettingInput from "../../Components/Input/SettingInput";
+import USER from "../../Controllers/User";
+import 'react-toastify/dist/ReactToastify.css';
 import "./Settings.css";
 // https://react-icons.github.io/react-icons/icons?name=fa
 
 const profileInput = [
-    {title: "Email:", name:"email", disabled: true}, 
-    {title: "Name:", name:"name", protect:true },
-    {title: "Password:", name:"password", type:"password"},
-    {title: "Repeat Password:", name:"password2", type:"password"}
+    {title: "Email", name:"email", disabled: true}, 
+    {title: "Name", name:"name", protect:true },
+    {title: "Password", name:"password", type:"password", minlength: 5, protect:true},
 ];
 
 const chatSettings = [
-    {title: "Nickname:", name:"nickname", protect: true},
-    {title: "State:", name:"state", protect: true}
+    {title: "Nickname", name:"nickname", protect: true, maxlength: 20},
+    {title: "State", name:"state", protect: true, maxlength: 30}
 ];
 
 const iconList = {
@@ -27,9 +29,19 @@ const iconList = {
     state: <FaLaugh className="input-icon"/>
 }
 
+const notifySetting = {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+}
+
 export default function Settings() {
 
-    const {user} = useContext(UserContext);
+    const {user, updateUser} = useContext(UserContext);
 
     const initialState = {
         name: user.name,
@@ -42,18 +54,72 @@ export default function Settings() {
 
     const [fields, fieldChange] = useForm(initialState);
 
-    const editHandler = (name) => {
-        if(name === 'email') {
-            console.error("Email can not update.")
-            return;
+    /**
+     * Shows an message
+     * @param {string} msg 
+     * @param {string} type values allowed: warn || success || error
+     */
+    const notify = (msg, type) => {
+        switch(type){
+            case 'warn':
+                toast.warn(msg, notifySetting ); break;
+            case 'success':
+                toast.success(msg, notifySetting); break;
+            case 'error':
+                toast.error(msg, notifySetting); break;
+            default:  
+                toast(msg, notifySetting );
         }
-        console.log(fields[name]);
+    }
+
+    /**
+     * Check if input name is email
+     * @param {String} name 
+     * @returns boolean
+     */
+    const isEmail = (name) => {
+        if(name !== 'email') return false;
+        console.error("Email can not update.")
+        return true;
+    }
+
+    /**
+     * Update a field by specifying its name
+     * @param {string} name 
+     * @returns 
+     */
+    const editHandler = async (name) => {
+        if(isEmail(name)) return;
+        // Create data to update
+        const userUpdate = { _id: user._id };
+        userUpdate[name] = name === 'password' 
+            ? fields[name] 
+            : fields[name].trim();
+        // Update form fields
+        fieldChange({target:{name, value:userUpdate[name]}});
+        // Update user
+        const { success, msg } = await USER.update(userUpdate);
+        if(success) updateUser(
+            userUpdate, 
+            (item) => USER.saveLocalUser(item)
+        );
+        // if is password, the field is cleared
+        if(name === 'password') fieldChange({target:{name, value: ''}});
+        // Show the result message
+        notify(msg, success ? 'success' : 'error');
+        console.log(msg);
     }
 
     const cancelHandler = (name) => {
+        // Reset to the initial value of an specific field
         fieldChange({target:{name, value: initialState[name]}})
     }
 
+    /**
+     * Create all inputs from list that contains input attributes
+     * @param {Array} inputList 
+     * @returns {Array<SettingInput>} SettingInput element
+     */
     const showInput = (inputList) => inputList.map(
         item =>
         <SettingInput key={item.name}
@@ -63,12 +129,18 @@ export default function Settings() {
             onChange={fieldChange}
             onEdit={editHandler}
             onCancel={cancelHandler}
+            notify={notify}
         />
     )
 
     return (
         <div className="setting-body">
             <section className="setting-container">
+            <ToastContainer 
+                closeOnClick 
+                theme="dark"
+                style={{width:280, marginLeft: 'auto'}}
+            />
                 <div className="setting-title">
                     <h1>Profile</h1>
                 </div>
