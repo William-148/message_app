@@ -13,9 +13,9 @@ import Home from "./views/Home/Home";
 import Inbox from "./views/Chat/Inbox";
 import UserState from "./Context/User/UserState";
 import UserContext from "./Context/User/UserContext";
-import Settings from "./Views/Settings/Settings";
-import NotFound from "./Views/NotFound/NotFound";
-import Start from "./Views/Start/Start";
+import Settings from "./views/Settings/Settings";
+import NotFound from "./views/NotFound/NotFound";
+import Start from "./views/Start/Start";
 import USER from "./Controllers/User";
 import './App.css';
 
