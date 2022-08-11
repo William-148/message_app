@@ -28,10 +28,10 @@ export default function SideBar(){
 
      const newRoom = async () => {
         const result = await Swal.fire({
-            title: 'Room name',
+            text: 'Room Name',
             input: 'text',
             showCancelButton: true,
-            width: 330
+            width: 300
         });
         if(result.isConfirmed && result.value !== '')
             existRoom(result.value);

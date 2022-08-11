@@ -32,31 +32,34 @@ body {
 
 /*********** Sweet alert style ***********/
 .swal2-popup{
-  background: #272740 ;
-  padding: 5px 0 15px 0;
+  padding: 0 0 10px 0;
+  border-radius: 3px;
+  border: solid 1px #313338;
+  background: #15151e;
+  /* background: #1a1c20; */
 }
 
 .swal2-title{
-  font-weight: 100 !important;
   font-size: 1.2em !important;
   color: #fff;
   text-align: left;
   margin-left: 15px;
 }
 
+.swal2-html-container{
+  color: #a8a8a8;
+  font-size: 0.95em;
+}
+
 .swal2-input {
-  border: none;
+  border: solid 1px #25272b !important;
   outline: none !important;
-  color: #fff;
-  background: #353c54;
+  font-size: 0.85em;
+  color: #e3e3e3;
+  background: #25272b;
 }
 
 .swal2-input:focus {
-  border: none;
-  outline: none !important;
-}
-
-.swal2-input:active {
   border: none;
   outline: none !important;
 }
@@ -67,12 +70,18 @@ body {
   justify-content: end;
 }
 
+.swal2-actions button{
+  font-size: 0.8rem !important;
+  border-radius: 2px !important;
+  padding: 6px 15px;
+}
+
 .swal2-confirm {
-  background: #0297e1 !important;
+  background: #018ad9 !important;
   color: #c0c0c0;
 }
 
 .swal2-cancel {
-  background: #464c62 !important;
+  background: #2a2d35 !important;
   color: #c0c0c0;
 }

@@ -1,4 +1,3 @@
-import io from "socket.io-client";
 import Swal from 'sweetalert2';
 import { useContext, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
@@ -29,31 +28,17 @@ export default function Home() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(!socket) initSocket(io(HOST));
+        // Init Socket connection
+        initSocket(HOST);
+        // Active sidebar depending windown's width
         if(window.innerWidth > 768) setSidebarActive();
         // Redirect to current route when the page is reload
         navigate(state?.state?.pathname ?? '/desktop')
     }, []);
 
-    useEffect(() => {
-        if (!!socket) socketStart();
-    }, [socket]);
-
-    const socketStart = () => {
-        socket.on("me", (id) => {
-            socket.emit('new_user', {
-                id: user._id,
-                socket: id,
-                nickname: user.nickname,
-                state: user.state,
-                photo: user.photo
-            });
-        });
-    }
-
-    const logout = async () => {
+    const logoutHandler = async () => {
         const result = await Swal.fire({
-            title: 'Do you want to logout?',
+            text: "Do you want to logout?",
             showCancelButton: true,
             confirmButtonText: 'Ok',
             width: 250
@@ -97,7 +82,7 @@ export default function Home() {
                                 <div className="job">Admin</div>
                             </div>
                         </div>
-                        <button title="Log out" onClick={logout}>
+                        <button title="Log out" onClick={logoutHandler}>
                             <FaSignOutAlt id="logout"/>
                         </button>
                     </div>

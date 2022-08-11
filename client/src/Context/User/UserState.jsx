@@ -1,4 +1,5 @@
 import React, { useReducer } from "react";
+import io from "socket.io-client";
 import UserReducer from "./UserReducer";
 import UserContext from "./UserContext";
 
@@ -10,7 +11,19 @@ const UserState = (props) => {
 
     const [state, dispatch] = useReducer(UserReducer, initialState);
 
-    const initSocket = (socket) => {
+    const initSocket = (Host) => {
+        if(!state.user) return;
+        const socket = io(Host);
+        socket.on("me", (id) => {
+            socket.emit('new_user', {
+                id: state.user._id,
+                socket: id,
+                nickname: state.user.nickname,
+                state: state.user.state,
+                photo: state.user.photo
+            });
+        });
+
         dispatch({
             type: 'SOCKET',
             payload: socket
