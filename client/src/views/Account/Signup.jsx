@@ -1,13 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { BiEnvelope, BiKey, BiRename, BiUser, BiIdCard } from "react-icons/bi";
-import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from 'react-router-dom';
 import useForm from "../../Hooks/useForm";
 import FormInput from "./Components/FormInput";
+import LoginGoogle from "../../Components/Authentication/LoginGoogle";
 import Swal from 'sweetalert2';
 import USER from "../../Controllers/User";
+import Api from "../../Config/Api";
 import './Account.css';
 // https://react-icons.github.io/react-icons/icons?name=bi
+const { GOOGLE } = Api;
 
 const Signup = () => {
 
@@ -19,6 +22,7 @@ const Signup = () => {
         password2: ''
     };
     const [fields, fieldChange, resetFields] = useForm(initialState);
+    const navigate = useNavigate();
 
     const inputList = [
         {title: "Name:", name:"name", autoFocus:true},
@@ -35,8 +39,31 @@ const Signup = () => {
         password: <BiKey className="input-icon"/>,
         password2: <BiRename className="input-icon"/>
     }
+
+    const signup = async (data) => {
+        const { msg, success } = await USER.signUp(data);
+        if(success) resetFields();
+        Swal.fire({
+            text: msg,
+            width: 300
+        });
+        if(success) navigate('/')
+    }
+
+    const responseGoogle = (res) => {
+        const { email, name, imageUrl, googleId, givenName } = res.profileObj;
+        const user = {
+            name: givenName,
+            nickname: givenName,
+            email,
+            password: googleId,
+            keyAuth: googleId,
+            photo: imageUrl
+        }
+        signup(user);
+    }
     
-    const login = async (event) => {
+    const signupHandler = async (event) => {
         event.preventDefault();
         const { password2, ...user} = fields;
         if(user.password !== password2){
@@ -46,13 +73,7 @@ const Signup = () => {
             });
             return;
         }
-        
-        const { msg, success } = await USER.signUp(user);
-        if(success) resetFields();
-        Swal.fire({
-            title: msg,
-            width: 300
-        });
+        signup(user);
     }
 
     const createFields = () => {
@@ -79,17 +100,20 @@ const Signup = () => {
                 </aside>
                 <section>
                     <h2>Sign Up</h2>
-                    <form className='form' onSubmit={login}>
+                    <form className='form' onSubmit={signupHandler}>
                         {createFields()}
                         <div className='input-button'>
                             <input type="submit" value="Sign Up" />
                         </div>
                         <hr className="line" />
                         <footer>
-                            <button className="login-g" type="button">
-                                <FcGoogle/>
-                                <p>Sign up with Google</p>
-                            </button>
+                            <LoginGoogle
+                                clientId={GOOGLE.clientId}
+                                buttonText="Sign up with Google"
+                                onSuccess={responseGoogle}
+                                onFailure={(failure)=>console.error(failure)}
+                                cookiePolicy={'single_host_origin'}
+                            />
                             <div className="signup">
                                 <Link to="/">Sign In</Link>
                             </div>

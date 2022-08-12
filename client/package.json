@@ -9,8 +9,10 @@
   },
   "dependencies": {
     "emoji-picker-react": "^3.5.1",
+    "gapi-script": "^1.2.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-google-login": "^5.2.2",
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
     "react-toastify": "^9.0.7",

@@ -132,6 +132,16 @@ class Room{
             return null;
         }
     }
+
+    async deleteAllMessages (roomId) {
+        try {
+            const finded = await Message.deleteMany({ roomId })
+            return finded;
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+    }
 }
 
 export default new Room();

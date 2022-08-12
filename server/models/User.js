@@ -25,6 +25,9 @@ const user = new Schema({
     password:{
         type: String,
         required: true
+    },
+    keyAuth:{
+        type: String
     }
 });
 

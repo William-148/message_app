@@ -30,8 +30,9 @@ app.get('/', (req, res) => {
 });
 
 app.post('/test', async (req, res) => {
-    // const finded = await Room.getFirstMessages("62e621345912a57281945bb0");
-    const finded = await Room.getMessagesBelowDate("62e621345912a57281945bb0", "2022-08-02T06:02:08.399Z");
+    // "62e621345912a57281945bb0"
+    //const finded = await Room.deleteAllMessages("62e621345912a57281945bb0");
+    //console.log(finded);
     res.status(200).send({message:"Test app!!", finded});
 });
 

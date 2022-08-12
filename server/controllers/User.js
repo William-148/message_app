@@ -5,13 +5,26 @@ import '../config.js'
 const { SECRET_KEY } = process.env;
 
 class User{
+
+    /**
+     * Encrypt a text passed by param
+     * @param {string} data 
+     * @returns {string} encripted text
+     */
+    encrypt(data){
+        return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
+    }
+
     async signUp(user){
         let status = 400;
         let msg = "User already registered.";
         try{
             const finded = await UserModel.findOne({email:user.email});
             if(!!finded) return { status, msg }
-            user['password'] = CryptoJS.AES.encrypt(user.password, SECRET_KEY).toString();
+            // Encrypt password
+            user['password'] = this.encrypt(user.password);
+            // Encrypt googleId
+            if(!!user.keyAuth) user.keyAuth = this.encrypt(user.keyAuth);
             const userModel = new UserModel(user);
             await userModel.save();
             status = 201;
@@ -25,19 +38,28 @@ class User{
     }
 
     async signIn(user){
-        const {email, password} = user;
+        const { email, password, keyAuth } = user;
         try{
             const finded = await UserModel.findOne({email});
             if(!finded) return { 
                 status: 404, 
                 msg: "User doesn't exist or incorrect."
             }
+
+            if(!!password)
             if(!this.passIsCorrect(password, finded.password)) 
             return { 
                 status: 400, 
                 msg: "Password is incorrect."
             }
             
+            if(!!keyAuth)
+            if(!this.passIsCorrect(keyAuth, finded.keyAuth)) 
+            return { 
+                status: 400, 
+                msg: "Key auth is incorrect."
+            }
+
             const{_id, name, nickname, photo, state} = finded;
             return { 
                 status: 200, 
@@ -76,6 +98,7 @@ class User{
     }
 
     passIsCorrect(password, hidden){
+        if(!hidden) return false;
         const decrypt = CryptoJS.AES.decrypt(hidden, SECRET_KEY).toString(CryptoJS.enc.Utf8);
         return decrypt == password
     }

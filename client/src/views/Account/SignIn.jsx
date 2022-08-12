@@ -2,28 +2,38 @@ import { useContext } from "react";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { BiEnvelope, BiKey } from "react-icons/bi";
-import { FcGoogle } from "react-icons/fc";
 import useForm from "../../Hooks/useForm";
 import UserContext from "../../Context/User/UserContext";
 import USER from "../../Controllers/User";
 import FormInput from "./Components/FormInput";
+import LoginGoogle from "../../Components/Authentication/LoginGoogle";
+import Api from "../../Config/Api";
 import './Account.css';
 // https://react-icons.github.io/react-icons/icons?name=bi
-
+const { GOOGLE } = Api;
 
 export default function SignIn() {
 
     const { signin } = useContext(UserContext);
     const [ fields, fieldChange ] = useForm({ email: '', password: ''});
 
-    const login = async (event) => {
-        event.preventDefault();
-        const {msg, data, success} = await USER.signIn(fields);
+    const login = async (credentials) => {
+        const {msg, data, success} = await USER.signIn(credentials);
         if(success) signin(data);
         else Swal.fire({
-            title: msg,
+            text: msg,
             width: 300
-        });;
+        });
+    }
+
+    const loginHandler = (event) => {
+        event.preventDefault();
+        login(fields);
+    }
+
+    const responseGoogle = (res) => {
+        const { email, googleId } = res.profileObj;
+        login({ email, keyAuth: googleId });
     }
 
     return (
@@ -38,7 +48,7 @@ export default function SignIn() {
                 </aside>
                 <section>
                     <h2>Sign In</h2>
-                    <form className='form' onSubmit={login}>
+                    <form className='form' onSubmit={loginHandler}>
                         <FormInput
                             title="Email" placeholder='Email'
                             icon={<BiEnvelope className="input-icon"/>}
@@ -60,10 +70,13 @@ export default function SignIn() {
                         </div>
                         <hr className="line" />
                         <footer>
-                            <button className="login-g" type="button">
-                                <FcGoogle/>
-                                <p>Sign in with Google</p>
-                            </button>
+                            <LoginGoogle
+                                clientId={GOOGLE.clientId}
+                                buttonText="Sign in with Google"
+                                onSuccess={responseGoogle}
+                                onFailure={(failure)=>console.error(failure)}
+                                cookiePolicy={'single_host_origin'}
+                            />
                             <div className="signup">
                                 <Link to="/signup">Create an account</Link>
                             </div>
@@ -74,5 +87,7 @@ export default function SignIn() {
         </div>
     );
 }
+
+
 
  
