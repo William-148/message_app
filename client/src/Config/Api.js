@@ -9,7 +9,6 @@ export default {
         update: `${BACKEND_HOST}/update`
     },
     GOOGLE:{
-        clientId: CLIENT_ID,
-        clientSecret: CLIENT_SECRET
+        clientId: CLIENT_ID
     }
 }
