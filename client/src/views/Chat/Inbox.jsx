@@ -1,14 +1,15 @@
 import { useEffect, useContext } from "react";
 import { BiChat, BiXCircle } from "react-icons/bi";
-import ChatContext from "../../Context/Chat/ChatContext";
-import useToggle from "../../Hooks/useToggle";
-import SideBar from "../../Components/Chat/SideBar/SideBar";
-import ViewMessage from "../../Components/Chat/Message/ViewMessage";
-import NavMessage from "../../Components/Chat/Message/NavMessage"
-import InputMessage from "../../Components/Chat/Message/InputMessage";
-import Waiting from "../../Components/Chat/Waiting/Waiting";
 import Picker from "emoji-picker-react";
-
+import { ChatContext } from "@/Context/Chat";
+import { useToggle } from "@/Hooks";
+import { Waiting } from "./Components/Waiting";
+import { SideBar } from "./Components/SideBar";
+import { 
+    ViewMessage, 
+    InputMessage, 
+    NavMessage 
+} from "./Components/Message"
 import './Chat.css'
 // https://react-icons.github.io/react-icons/icons?name=bi
 

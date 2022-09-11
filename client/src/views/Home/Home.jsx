@@ -5,13 +5,12 @@ import { FaHtml5, FaBars, FaThLarge,
     FaCommentAlt, FaWrench, FaSignOutAlt
 } from "react-icons/fa";
 import { AsideLink } from "./Components/HomeElements";
-import UserContext from "../../Context/User/UserContext";
-import ChatState from "../../Context/Chat/ChatState";
-import useToggle from "../../Hooks/useToggle";
-import USER from "../../Controllers/User";
-import Api from "../../Config/Api";
+import { UserContext } from "@/Context/User";
+import { ChatState } from "@/Context/Chat";
+import { useToggle } from "@/Hooks";
+import { HOST } from "@/Config/Api";
+import USER from "@/Controllers/User";
 import './Home.css'
-const { HOST } = Api;
 // https://react-icons.github.io/react-icons/icons?name=bi
 
 const links = [

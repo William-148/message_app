@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import ChatContext from "../../../Context/Chat/ChatContext";
+import { ChatContext } from "@/Context/Chat";
 import { FaUsers } from "react-icons/fa";
 import "./NavMessage.css";
 // https://react-icons.github.io/react-icons/icons?name=bi

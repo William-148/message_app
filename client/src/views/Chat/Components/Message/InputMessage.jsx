@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { BiHappyBeaming, BiRightArrowCircle } from "react-icons/bi";
-import ChatContext from "../../../Context/Chat/ChatContext";
+import { ChatContext } from "@/Context/Chat";
 import "./InputMessage.css";
 
 export default function InputMessage({onClick}) {

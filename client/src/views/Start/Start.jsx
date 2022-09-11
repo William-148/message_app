@@ -1,5 +1,5 @@
 import "./Start.css";
-import image from "../../assets/img/connection.png"
+import image from "@/assets/img/connection.png"
 
 const Start = () => {
     return (

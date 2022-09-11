@@ -1,10 +1,10 @@
 
 import { useContext } from "react";
-import Swal from 'sweetalert2';
 import { FaUserTimes, FaUsersSlash, FaPlusCircle, FaCircleNotch } from "react-icons/fa";
+import Swal from 'sweetalert2';
+import { UserContext } from "@/Context/User";
+import { ChatContext } from "@/Context/Chat";
 import { Contact } from '../ChatElements';
-import UserContext from "../../../Context/User/UserContext";
-import ChatContext from "../../../Context/Chat/ChatContext";
 import './SideBar.css';
 // https://react-icons.github.io/react-icons/icons?name=fa
 

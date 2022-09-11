@@ -1,22 +1,21 @@
 import { useEffect, useRef, useContext } from "react";
 import { Message } from "../ChatElements";
-import ChatContext from "../../../Context/Chat/ChatContext";
-import UserContext from "../../../Context/User/UserContext";
+import { ChatContext } from "@/Context/Chat";
+import { UserContext } from "@/Context/User";
 import "./ViewMessage.css";
-import { useState } from "react";
 
 export default function ViewMessage() {
 
     const lastMessageRef = useRef();
+    const isBottom  = useRef(true);
     const { messages, requestOldMessages, room } = useContext(ChatContext);
     const { user } = useContext(UserContext);
-    const [ isBottom, setIsBottom ] = useState(true);
 
     useEffect(()=>{
-        if(isBottom) updateView();
+        if(isBottom.current) updateView();
     },[messages]);
 
-    useEffect(() => setIsBottom(true), [room]);
+    useEffect(() =>{ isBottom.current = true }, [room]);
 
     const updateView = () => {
         if(!!lastMessageRef) lastMessageRef.current.scrollIntoView(false);
@@ -24,14 +23,14 @@ export default function ViewMessage() {
 
     const handleScroll = (e) => {
         const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-        setIsBottom(false);
+        isBottom.current = false;
         if(scrollTop === 0) {
             e.currentTarget.scrollTop = 2;
             requestOldMessages();
             return;
         }
         const bottom = scrollTop + clientHeight - scrollHeight;
-        if (bottom < 15 && bottom > -15 ) setIsBottom(true);
+        if (bottom < 15 && bottom > -15 ) isBottom.current = true;
     } 
 
     const showMessages = () => {

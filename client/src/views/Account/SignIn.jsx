@@ -1,16 +1,15 @@
 import { useContext } from "react";
-import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { BiEnvelope, BiKey } from "react-icons/bi";
-import useForm from "../../Hooks/useForm";
-import UserContext from "../../Context/User/UserContext";
-import USER from "../../Controllers/User";
+import Swal from "sweetalert2";
+import { useForm } from "@/Hooks";
+import { GOOGLE } from "@/Config/Api";
+import { UserContext } from "@/Context/User";
+import USER from "@/Controllers/User";
 import FormInput from "./Components/FormInput";
-import LoginGoogle from "../../Components/Authentication/LoginGoogle";
-import Api from "../../Config/Api";
+import LoginGoogle from "./Components/LoginGoogle";
 import './Account.css';
 // https://react-icons.github.io/react-icons/icons?name=bi
-const { GOOGLE } = Api;
 
 export default function SignIn() {
 

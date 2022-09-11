@@ -7,15 +7,8 @@ import {
     useLocation
   } from "react-router-dom";
 import { useContext, useEffect } from "react";
-import Signup from './views/Account/Signup';
-import SignIn from "./views/Account/SignIn";
-import Home from "./views/Home/Home";
-import Inbox from "./views/Chat/Inbox";
-import UserState from "./Context/User/UserState";
-import UserContext from "./Context/User/UserContext";
-import Settings from "./views/Settings/Settings";
-import NotFound from "./views/NotFound/NotFound";
-import Start from "./views/Start/Start";
+import { SignUp, SignIn, Home, Inbox, Settings, NotFound, Start } from './views'
+import { UserState, UserContext } from './Context/User'
 import USER from "./Controllers/User";
 import './App.css';
 
@@ -42,7 +35,7 @@ function App() {
                     <Protected isPublic element={ <SignIn/> }/>
                 }/>
                 <Route path="/signup" element={
-                    <Protected isPublic element={ <Signup/> }/>
+                    <Protected isPublic element={ <SignUp/> }/>
                 }/>
                 <Route path="/desktop" element={
                     <Protected element={<Home/>} />

@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { FaUserAlt, FaIdCard, FaEnvelope, FaExpeditedssl, FaLaugh } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
-import UserContext from "../../Context/User/UserContext";
-import useForm from "../../Hooks/useForm";
-import SettingInput from "../../Components/Input/SettingInput";
-import USER from "../../Controllers/User";
+import { UserContext } from "@/Context/User";
+import { useForm } from "@/Hooks";
+import { SettingInput } from "@/Components";
+import USER from "@/Controllers/User";
 import 'react-toastify/dist/ReactToastify.css';
 import "./Settings.css";
 // https://react-icons.github.io/react-icons/icons?name=fa

@@ -2,17 +2,31 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { BiEnvelope, BiKey, BiRename, BiUser, BiIdCard } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
-import useForm from "../../Hooks/useForm";
-import FormInput from "./Components/FormInput";
-import LoginGoogle from "../../Components/Authentication/LoginGoogle";
 import Swal from 'sweetalert2';
-import USER from "../../Controllers/User";
-import Api from "../../Config/Api";
+import { useForm } from "@/Hooks";
+import USER from "@/Controllers/User";
+import FormInput from "./Components/FormInput";
+import LoginGoogle from "./Components/LoginGoogle";
 import './Account.css';
 // https://react-icons.github.io/react-icons/icons?name=bi
-const { GOOGLE } = Api;
 
-const Signup = () => {
+const inputList = [
+    {title: "Name:", name:"name", autoFocus:true},
+    {title: "Nickname:", name:"nickname"},
+    {title: "Email:", name:"email", type:"email"},
+    {title: "Password:", name:"password", type:"password"},
+    {title: "Repeat Password:", name:"password2", type:"password"}
+];
+
+const iconList = {
+    name: <BiUser className="input-icon"/>,
+    nickname: <BiIdCard className="input-icon"/>,
+    email: <BiEnvelope className="input-icon"/>,
+    password: <BiKey className="input-icon"/>,
+    password2: <BiRename className="input-icon"/>
+}
+
+const SignUp = () => {
 
     const initialState = { 
         name: '', 
@@ -23,22 +37,6 @@ const Signup = () => {
     };
     const [fields, fieldChange, resetFields] = useForm(initialState);
     const navigate = useNavigate();
-
-    const inputList = [
-        {title: "Name:", name:"name", autoFocus:true},
-        {title: "Nickname:", name:"nickname"},
-        {title: "Email:", name:"email", type:"email"},
-        {title: "Password:", name:"password", type:"password"},
-        {title: "Repeat Password:", name:"password2", type:"password"}
-    ];
-
-    const iconList = {
-        name: <BiUser className="input-icon"/>,
-        nickname: <BiIdCard className="input-icon"/>,
-        email: <BiEnvelope className="input-icon"/>,
-        password: <BiKey className="input-icon"/>,
-        password2: <BiRename className="input-icon"/>
-    }
 
     const signup = async (data) => {
         const { msg, success } = await USER.signUp(data);
@@ -125,4 +123,4 @@ const Signup = () => {
     );
 }
 
- export default Signup;
+ export default SignUp;

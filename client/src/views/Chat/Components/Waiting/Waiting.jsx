@@ -1,5 +1,6 @@
 import "./Waiting.css"
-import image from "../../../assets/img/wolf.png"
+import image from "@/assets/img/wolf.png"
+
 export default function Waiting(){
     return (
         <div className="waiting-conteiner">

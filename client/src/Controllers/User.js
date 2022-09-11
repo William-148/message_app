@@ -1,6 +1,5 @@
 import Control from "./Control";
-import api from "../Config/Api";
-const { AUTH } = api;
+import {AUTH} from "@/Config/Api.js";
 
 class User extends Control{
     ITEM_USER = "user";
